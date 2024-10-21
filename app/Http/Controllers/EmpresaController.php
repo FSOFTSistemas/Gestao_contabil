@@ -12,7 +12,8 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        //
+        $empresas = Empresa::all();
+        return view('empresa.index',['empresas' => $empresas]);
     }
 
     /**
@@ -20,7 +21,7 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        //
+        return view('empresa.form');
     }
 
     /**
@@ -28,7 +29,17 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'razao_social' => 'required|string|max:255',
+            'fantasia' => 'required|string|max:255',
+            'cnpj' => 'required|string|max:18',
+            'email' => 'required|email',
+
+        ]);
+
+        Empresa::create($request->all());
+
+        return redirect()->route('empresas.index')->with('success', 'Empresa cadastrada com sucesso!');
     }
 
     /**

@@ -12,7 +12,8 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        //
+        $clientes = cliente::all();
+        return view('cliente.all', ['clientes' => $clientes]);
     }
 
     /**

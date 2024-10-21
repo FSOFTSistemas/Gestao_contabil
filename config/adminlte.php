@@ -299,30 +299,9 @@ return [
     */
 
     'menu' => [
-    // Navbar items:
-    [
-        'type' => 'navbar-search',
-        'text' => 'search',
-        'topnav_right' => true,
-    ],
-    [
-        'type' => 'fullscreen-widget',
-        'topnav_right' => true,
-    ],
-
-    // Sidebar items:
-    [
-        'type' => 'sidebar-menu-search',
-        'text' => 'search',
-    ],
-    [
-        'text' => 'Blog',
-        'url' => 'admin/blog',
-        'can' => 'manage-blog',
-    ],
     [
         'text' => 'Home',
-        'url' => 'admin/pages',
+        'url' => 'home',
         'icon' => 'fas fa-fw fa-home',
         'label_color' => 'success',
     ],

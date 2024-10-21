@@ -12,7 +12,8 @@ class PlanoDeContasController extends Controller
      */
     public function index()
     {
-        //
+        $planoDeContas = PlanoDeContas::all();
+        return view('planodecontas.all', ['planodecontas' => $planoDeContas]);
     }
 
     /**
