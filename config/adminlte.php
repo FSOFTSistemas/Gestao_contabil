@@ -171,11 +171,11 @@ return [
     |
     */
 
-    'classes_auth_card' => 'card-outline card-primary',
-    'classes_auth_header' => '',
+    'classes_auth_card' => '',
+    'classes_auth_header' => 'bg-gradient-info',
     'classes_auth_body' => '',
-    'classes_auth_footer' => '',
-    'classes_auth_icon' => '',
+    'classes_auth_footer' => 'text-center',
+    'classes_auth_icon' => 'fa-lg text-info',
     'classes_auth_btn' => 'btn-flat btn-primary',
 
     /*
@@ -261,8 +261,8 @@ return [
     'logout_url' => 'logout',
     'login_url' => 'login',
     'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'password_reset_url' => false, //'password/reset',
+    'password_email_url' => false, //'password/email',
     'profile_url' => false,
     'disable_darkmode_routes' => false,
 
@@ -299,36 +299,68 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
-
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'Home',
-            'url' => 'admin/pages',
-            'icon' => 'fas fa-fw fa-home',
-            'label_color' => 'success',
-        ],
-
-
+    // Navbar items:
+    [
+        'type' => 'navbar-search',
+        'text' => 'search',
+        'topnav_right' => true,
     ],
+    [
+        'type' => 'fullscreen-widget',
+        'topnav_right' => true,
+    ],
+
+    // Sidebar items:
+    [
+        'type' => 'sidebar-menu-search',
+        'text' => 'search',
+    ],
+    [
+        'text' => 'Blog',
+        'url' => 'admin/blog',
+        'can' => 'manage-blog',
+    ],
+    [
+        'text' => 'Home',
+        'url' => 'admin/pages',
+        'icon' => 'fas fa-fw fa-home',
+        'label_color' => 'success',
+    ],
+    [
+        'header' => 'Gestão',
+        'can' => 'manage-gestao',
+    ],
+    [
+        'text' => 'Empresas',
+        'url' => 'empresas',
+        'icon' => 'fas fa-building',
+    ],
+    [
+        'text' => 'Clientes',
+        'url' => 'clientes',
+        'icon' => 'fas fa-users',
+    ],
+    [
+        'text' => 'Fornecedores',
+        'url' => 'fornecedores',
+        'icon' => 'fas fa-truck',
+    ],
+    [
+        'text' => 'Produtos',
+        'url' => 'produtos',
+        'icon' => 'fas fa-box',
+    ],
+    [
+        'text' => 'Movimentos',
+        'url' => 'movimentos',
+        'icon' => 'fas fa-exchange-alt',
+    ],
+    [
+        'text' => 'Planos de Contas',
+        'url' => 'planos-de-contas',
+        'icon' => 'fas fa-list-alt',
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
