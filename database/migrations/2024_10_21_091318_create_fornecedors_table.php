@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('telefone')->nullable();
             $table->string('endereco')->nullable();
-            $table->string('cidade');
-            $table->string('estado');
-            $table->string('cep');
+            $table->string('cidade')->nullable();
+            $table->string('estado')->nullable();
+            $table->string('cep')->nullable();
             $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');  // Chave estrangeira para empresa
             $table->timestamps();
         });
