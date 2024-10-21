@@ -9,12 +9,12 @@ use App\Http\Controllers\PlanoDeContasController;
 use App\Http\Controllers\EmpresaController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 
 
 Route::middleware(['auth'])->group(function () {
