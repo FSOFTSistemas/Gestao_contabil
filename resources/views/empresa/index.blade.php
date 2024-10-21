@@ -13,7 +13,7 @@
     </div>
 </div>
 
-@component('components.data-Table', [
+@component('components.data-table', [
     'responsive' => [
             [
                 'responsivePriority' => 1,
