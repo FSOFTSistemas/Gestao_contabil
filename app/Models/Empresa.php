@@ -21,4 +21,10 @@ class Empresa extends Model
         'estado',
         'cep',
     ];
+
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
