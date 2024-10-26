@@ -12,7 +12,6 @@ class PlanoDeContas extends Model
     protected $fillable = [
         'descricao',
         'tipo',
-        'empresa_id',
     ];
 
     /**

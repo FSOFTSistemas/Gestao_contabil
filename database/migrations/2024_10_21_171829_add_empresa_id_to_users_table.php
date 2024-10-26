@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plano_de_contas', function (Blueprint $table) {
-            $table->id();
-            $table->string('descricao');
-            $table->enum('tipo', ['receita', 'despesa']);
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('empresa_id')->nullable()->constrained()->onDelete('set null');
         });
     }
 
@@ -24,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plano_de_contas');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['empresa_id']);
+            $table->dropColumn('empresa_id');
+        });
     }
 };

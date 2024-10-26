@@ -325,7 +325,7 @@ return [
         'icon' => 'fas fa-truck',
     ],
     [
-        'text' => 'Produtos',
+        'text' => 'Produtos/Serviços',
         'url' => 'produtos',
         'icon' => 'fas fa-box',
     ],
@@ -339,6 +339,11 @@ return [
         'url' => 'planos-de-contas',
         'icon' => 'fas fa-list-alt',
     ],
+    [
+       'text' => 'Configurações',
+        'url' => 'planos-de-contas',
+        'icon' => 'fas fa-list-alt',
+    ]
 ],
 
     /*

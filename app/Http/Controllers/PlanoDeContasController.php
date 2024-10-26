@@ -21,7 +21,7 @@ class PlanoDeContasController extends Controller
      */
     public function create()
     {
-        //
+        return view('planodecontas.form');
     }
 
     /**
@@ -29,7 +29,14 @@ class PlanoDeContasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'descricao' => 'required|string|max:255',
+            'tipo' => 'required|in:despesa,receita',
+        ]);
+
+        PlanoDeContas::create($validatedData);
+
+        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas criado com sucesso!');
     }
 
     /**
@@ -53,7 +60,14 @@ class PlanoDeContasController extends Controller
      */
     public function update(Request $request, PlanoDeContas $planoDeContas)
     {
-        //
+        $validatedData = $request->validate([
+            'descricao' => 'required|string|max:255',
+            'tipo' => 'required|in:despesa,receita',
+        ]);
+
+        $planoDeContas->update($validatedData);
+
+        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas atualizado com sucesso!');
     }
 
     /**

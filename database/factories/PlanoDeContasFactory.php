@@ -19,7 +19,6 @@ class PlanoDeContasFactory extends Factory
         return [
             'descricao' => $this->faker->word,
             'tipo' => $this->faker->randomElement(['receita', 'despesa']),
-            'empresa_id' => \App\Models\Empresa::factory(), // Relaciona com a empresa
         ];
     }
 }
