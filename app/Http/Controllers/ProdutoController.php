@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,8 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        //
+        $empresas = Empresa::all();
+        return view('produto.form', ['empresas' => $empresas]);
     }
 
     /**
@@ -29,7 +31,17 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'descricao' => 'required|string|max:255',
+            'precocusto' => 'required|numeric',
+            'precovenda' => 'required|numeric',
+            'estoque' => 'required|integer',
+            'empresa_id' => 'required|exists:empresas,id',
+        ]);
+
+        Produto::create($validatedData);
+
+        return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
     }
 
     /**
@@ -37,7 +49,7 @@ class ProdutoController extends Controller
      */
     public function show(Produto $produto)
     {
-        //
+        // return view('produtos.show', compact('produto'));
     }
 
     /**
@@ -45,7 +57,7 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        //
+        return view('produtos.form', compact('produto'));
     }
 
     /**
@@ -53,7 +65,17 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
-        //
+        $validatedData = $request->validate([
+            'descricao' => 'required|string|max:255',
+            'precocusto' => 'required|numeric',
+            'precovenda' => 'required|numeric',
+            'estoque' => 'required|integer',
+            'empresa_id' => 'required|exists:empresas,id',
+        ]);
+
+        $produto->update($validatedData);
+
+        return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
     /**
@@ -61,6 +83,8 @@ class ProdutoController extends Controller
      */
     public function destroy(Produto $produto)
     {
-        //
+        $produto->delete();
+
+        return redirect()->route('produtos.index')->with('success', 'Produto excluído com sucesso!');
     }
 }

@@ -33,7 +33,7 @@ class FornecedorController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cnpj' => 'required|string|unique:fornecedores,cnpj|size:18',
+            'cnpj' => 'required|string|size:18',
             'email' => 'required|string|email|max:255',
             'telefone' => 'required|string|max:15',
             'endereco' => 'required|string|max:255',
@@ -42,7 +42,7 @@ class FornecedorController extends Controller
 
         Fornecedor::create($validatedData);
 
-        return redirect()->route('fornecedores.all')->with('success', 'Fornecedor criado com sucesso!');
+        return redirect()->route('fornecedores.index')->with('success', 'Fornecedor criado com sucesso!');
     }
 
     /**

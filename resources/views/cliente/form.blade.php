@@ -47,15 +47,6 @@ $isEdit = isset($cliente); // Verifica se estamos em modo de edição
     </div>
 
     <div class="form-group mb-3">
-        <label for="cpf">CPF</label>
-        <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf"
-            name="cpf" value="{{ old('cpf', $cliente->cpf ?? '') }}" required>
-        @error('cpf')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="form-group mb-3">
         <label for="endereco">Endereço</label>
         <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco"
             name="endereco" value="{{ old('endereco', $cliente->endereco ?? '') }}">
@@ -87,6 +78,21 @@ $isEdit = isset($cliente); // Verifica se estamos em modo de edição
         <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
             name="cep" value="{{ old('cep', $cliente->cep ?? '') }}">
         @error('cep')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="mb-3">
+        <label for="empresa_id" class="form-label">Empresa</label>
+        <select class="form-control @error('empresa_id') is-invalid @enderror" id="empresa_id" name="empresa_id" required>
+            <option value="">Selecione uma empresa</option>
+            @foreach($empresas as $empresa)
+            <option value="{{ $empresa->id }}" {{ old('empresa_id', $fornecedor->empresa_id ?? '') == $empresa->id ? 'selected' : '' }}>
+                {{ $empresa->razao_social }}
+            </option>
+            @endforeach
+        </select>
+        @error('empresa_id')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('descricao');
             $table->enum('tipo', ['receita', 'despesa']);
-            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade'); 
             $table->timestamps();
         });
     }
