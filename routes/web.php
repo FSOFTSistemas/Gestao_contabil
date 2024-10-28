@@ -27,5 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('planos-de-contas', PlanoDeContasController::class);
     Route::resource('settings', ConfigController::class);
     Route::get('/seletor-empresa/{id}', [EmpresaController::class, 'selecionarEmpresa'])->name('seletor.empresa');
+    Route::get('/clientes/endereco/{cep}', [ClienteController::class, 'buscarEnderecoPorCep']);
+
 
 });

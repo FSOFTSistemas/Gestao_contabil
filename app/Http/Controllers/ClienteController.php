@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cliente;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ClienteController extends Controller
 {
@@ -70,7 +71,8 @@ class ClienteController extends Controller
      */
     public function edit(cliente $cliente)
     {
-        //
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('cliente.form', compact('cliente', 'empresas'));
     }
 
     /**
@@ -86,6 +88,7 @@ class ClienteController extends Controller
             'cidade' => 'nullable|string|max:100',
             'estado' => 'nullable|string|max:50',
             'cep' => 'nullable|string|max:10',
+            'empresa_id' => 'required'
         ]);
 
         $cliente->update([
@@ -96,10 +99,10 @@ class ClienteController extends Controller
             'cidade' => $request->cidade,
             'estado' => $request->estado,
             'cep' => $request->cep,
-            'empresa_id' => auth()->user()->empresa_id, // Relacionando com a empresa
+            'empresa_id' => $request->empresa_id,
         ]);
 
-        return redirect()->route('cliente.index')->with('success', 'Cliente atualizado com sucesso!');
+        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
     /**
@@ -107,6 +110,30 @@ class ClienteController extends Controller
      */
     public function destroy(cliente $cliente)
     {
-        //
+        try {
+
+            $cliente->delete();
+
+            return redirect()->route('clientes.index')->with('success', 'Cliente deletado com suscesso !');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao deletar cliente: ' . $e->getMessage());
+        }
+    }
+
+    public function buscarEnderecoPorCep($cep)
+    {
+        $cep = preg_replace('/[^0-9]/', '', $cep);
+
+        if (strlen($cep) !== 8) {
+            return response()->json(['error' => 'CEP inválido.'], 400);
+        }
+
+        $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
+
+        if ($response->failed()) {
+            return response()->json(['error' => 'Não foi possível buscar o endereço.'], 500);
+        }
+
+        return $response->json();
     }
 }
