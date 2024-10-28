@@ -13,7 +13,7 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::all();
+        $produtos = Produto::where('empresa_id', session('empresa_id'))->get();
         return view('produto.all', ['produtos' => $produtos]);
     }
 
@@ -22,7 +22,7 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $empresas = Empresa::all();
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
         return view('produto.form', ['empresas' => $empresas]);
     }
 

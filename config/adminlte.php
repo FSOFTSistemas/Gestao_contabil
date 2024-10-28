@@ -299,52 +299,47 @@ return [
     */
 
     'menu' => [
-    [
-        'text' => 'Home',
-        'url' => 'home',
-        'icon' => 'fas fa-fw fa-home',
-        'label_color' => 'success',
+        [
+            'text' => 'Home',
+            'url' => 'home',
+            'icon' => 'fas fa-fw fa-home',
+            'label_color' => 'success',
+        ],
+        [
+            'header' => 'Gestão',
+            'can' => 'manage-gestao',
+        ],
+        [
+            'text' => 'Clientes',
+            'url' => 'clientes',
+            'icon' => 'fas fa-users',
+        ],
+        [
+            'text' => 'Fornecedores',
+            'url' => 'fornecedores',
+            'icon' => 'fas fa-truck',
+        ],
+        [
+            'text' => 'Produtos e Serviços',
+            'url' => 'produtos',
+            'icon' => 'fas fa-box',
+        ],
+        [
+            'text' => 'Movimentos',
+            'url' => 'movimentos',
+            'icon' => 'fas fa-exchange-alt',
+        ],
+        [
+            'text' => 'Planos de Contas',
+            'url' => 'planos-de-contas',
+            'icon' => 'fas fa-list-alt',
+        ],
+        [
+            'text' => 'Configurações',
+            'url' => 'settings',
+            'icon' => 'fas fa-cogs',
+        ],
     ],
-    [
-        'header' => 'Gestão',
-        'can' => 'manage-gestao',
-    ],
-    [
-        'text' => 'Empresas',
-        'url' => 'empresas',
-        'icon' => 'fas fa-building',
-    ],
-    [
-        'text' => 'Clientes',
-        'url' => 'clientes',
-        'icon' => 'fas fa-users',
-    ],
-    [
-        'text' => 'Fornecedores',
-        'url' => 'fornecedores',
-        'icon' => 'fas fa-truck',
-    ],
-    [
-        'text' => 'Produtos/Serviços',
-        'url' => 'produtos',
-        'icon' => 'fas fa-box',
-    ],
-    [
-        'text' => 'Movimentos',
-        'url' => 'movimentos',
-        'icon' => 'fas fa-exchange-alt',
-    ],
-    [
-        'text' => 'Planos de Contas',
-        'url' => 'planos-de-contas',
-        'icon' => 'fas fa-list-alt',
-    ],
-    [
-       'text' => 'Configurações',
-        'url' => 'planos-de-contas',
-        'icon' => 'fas fa-list-alt',
-    ]
-],
 
     /*
     |--------------------------------------------------------------------------

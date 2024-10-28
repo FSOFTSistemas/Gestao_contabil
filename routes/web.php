@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\FornecedorController;
 use App\Http\Controllers\MovimentoController;
 use App\Http\Controllers\ProdutoController;
@@ -24,4 +25,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('produtos', ProdutoController::class);
     Route::resource('movimentos', MovimentoController::class);
     Route::resource('planos-de-contas', PlanoDeContasController::class);
+    Route::resource('settings', ConfigController::class);
+    Route::get('/seletor-empresa/{id}', [EmpresaController::class, 'selecionarEmpresa'])->name('seletor.empresa');
+    Route::get('/clientes/endereco/{cep}', [ClienteController::class, 'buscarEnderecoPorCep']);
+
+
 });

@@ -20,7 +20,8 @@ class clienteFactory extends Factory
             'nome' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
             'telefone' => $this->faker->phoneNumber,
-            'empresa_id' => \App\Models\Empresa::factory(), // Relaciona com a empresa
+            'cep' => $this->faker->postcode(),
+            'empresa_id' => \App\Models\Empresa::factory(),
         ];
     }
 }

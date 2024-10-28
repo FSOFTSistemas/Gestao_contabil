@@ -13,7 +13,7 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedores = Fornecedor::all();
+        $fornecedores = Fornecedor::where('empresa_id', session('empresa_id'))->get();
         return view('fornecedores.all', ['fornecedores' =>  $fornecedores]);
     }
 
@@ -22,7 +22,7 @@ class FornecedorController extends Controller
      */
     public function create()
     {
-        $empresas = Empresa::all();
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
         return view('fornecedores.form', ['empresas' => $empresas]);
     }
 

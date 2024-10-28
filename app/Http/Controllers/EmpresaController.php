@@ -50,6 +50,11 @@ class EmpresaController extends Controller
         //
     }
 
+    public function selecionarEmpresa($id) {
+        session(['empresa_id' => $id]);
+        return redirect()->back()->with('success', 'Empresa selecionada com sucesso!');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

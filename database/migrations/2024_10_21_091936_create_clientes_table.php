@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('endereco')->nullable();
             $table->string('cidade')->nullable();
             $table->string('estado')->nullable();
-            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade'); 
+            $table->string('cep')->nullable();
+            $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
             $table->timestamps();
         });
     }
