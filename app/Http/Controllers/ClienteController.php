@@ -23,7 +23,7 @@ class ClienteController extends Controller
      */
     public function create()
     {
-        $empresas = Empresa::all();
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
         return view('cliente.form', ['empresas' => $empresas]);
     }
 
