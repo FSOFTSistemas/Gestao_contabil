@@ -12,7 +12,7 @@ class MovimentoController extends Controller
      */
     public function index()
     {
-        $movimentos = Movimento::all();
+        $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
         return view('movimento.all',['movimento' => $movimentos]);
     }
 

@@ -13,7 +13,7 @@ class FornecedorController extends Controller
      */
     public function index()
     {
-        $fornecedores = Fornecedor::all();
+        $fornecedores = Fornecedor::where('empresa_id', session('empresa_id'))->get();
         return view('fornecedores.all', ['fornecedores' =>  $fornecedores]);
     }
 

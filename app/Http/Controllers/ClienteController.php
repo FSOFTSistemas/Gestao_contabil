@@ -13,8 +13,8 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = cliente::all();
 
+        $clientes = cliente::where('empresa_id', session('empresa_id'))->get();
         return view('cliente.all', ['clientes' => $clientes]);
     }
 
