@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\Movimento;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 
 class MovimentoController extends Controller
@@ -13,7 +15,9 @@ class MovimentoController extends Controller
     public function index()
     {
         $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
-        return view('movimento.all',['movimento' => $movimentos]);
+        $produtosServicos = Produto::where('empresa_id', session('empresa_id'))->get();
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas]);
     }
 
     /**
@@ -29,7 +33,29 @@ class MovimentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validação dos dados
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'tipo' => 'required|in:despesa,receita',
+            'data' => 'required|date',
+            'forma_pagamento' => 'required|string|max:255',
+            'valor' => 'required|numeric|min:0',
+            'produto_servico_id' => 'required|exists:produtos,id',
+            'empresa_id' => 'required|exists:empresas,id',
+        ]);
+
+        // Criar o movimento
+        Movimento::create([
+            'descricao' => $request->descricao,
+            'tipo' => $request->tipo,
+            'data' => $request->data,
+            'forma_pagamento' => $request->forma_pagamento,
+            'valor' => $request->valor,
+            'produto_servico_id' => $request->produto_servico_id,
+            'empresa_id' => $request->empresa_id,
+        ]);
+
+        return redirect()->route('movimentos.index')->with('success', 'Movimento criado com sucesso!');
     }
 
     /**
@@ -51,16 +77,47 @@ class MovimentoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Movimento $movimento)
+    public function update(Request $request, $id)
     {
-        //
+        // Encontrar o movimento
+        $movimento = Movimento::findOrFail($id);
+
+        // Validação dos dados
+        $request->validate([
+            'descricao' => 'required|string|max:255',
+            'tipo' => 'required|in:despesa,receita',
+            'data' => 'required|date',
+            'forma_pagamento' => 'required|string|max:255',
+            'valor' => 'required|numeric|min:0',
+            'produto_servico_id' => 'required|exists:produtos,id',
+            'empresa_id' => 'required|exists:empresas,id',
+        ]);
+
+        // Atualizar o movimento
+        $movimento->update([
+            'descricao' => $request->descricao,
+            'tipo' => $request->tipo,
+            'data' => $request->data,
+            'forma_pagamento' => $request->forma_pagamento,
+            'valor' => $request->valor,
+            'produto_servico_id' => $request->produto_servico_id,
+            'empresa_id' => $request->empresa_id,
+        ]);
+
+        return redirect()->route('movimentos.index')->with('success', 'Movimento atualizado com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Movimento $movimento)
+    public function destroy($id)
     {
-        //
+         // Encontrar o movimento
+         $movimento = Movimento::findOrFail($id);
+
+         // Excluir o movimento
+         $movimento->delete();
+
+         return redirect()->route('movimentos.index')->with('success', 'Movimento excluído com sucesso!');
     }
 }

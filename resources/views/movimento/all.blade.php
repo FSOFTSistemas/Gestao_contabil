@@ -1,20 +1,309 @@
 @extends('adminlte::page')
 
-@section('title', 'Movimento')
+@section('title', 'Movimentos Financeiros')
 
 @section('content_header')
-    <h1>Movimento</h1>
+<h1>Movimentos Financeiros</h1>
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
+<div class="row" style="margin-bottom: 2%">
+    <div class="col">
+        <!-- Botão para abrir o modal de novo movimento -->
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMovementModal">+ Novo Movimento</button>
+    </div>
+</div>
+
+@component('components.data-table', [
+'responsive' => [
+[
+'responsivePriority' => 1,
+'targets' => 0,
+],
+[
+'responsivePriority' => 2,
+'targets' => 1,
+],
+[
+'responsivePriority' => 3,
+'targets' => 2,
+],
+[
+'responsivePriority' => 4,
+'targets' => 5,
+],
+[
+'responsivePriority' => 5,
+'targets' => 4,
+]
+],
+'itemsPerPage' => 50,
+])
+<thead class="table-primary">
+    <tr>
+        <th>Descrição</th>
+        <th>Tipo</th>
+        <th>Data</th>
+        <th>Forma de Pagamento</th>
+        <th>Valor</th>
+        <th>Ações</th>
+    </tr>
+</thead>
+<tbody>
+    @foreach ($movimentos as $movimento)
+    <tr>
+        <td>{{ $movimento->descricao }}</td>
+        <td>{{ $movimento->tipo }}</td>
+        <td>{{ \Carbon\Carbon::parse($movimento->data)->format('d/m/Y') }}</td>
+        <td>{{ $movimento->forma_pagamento }}</td>
+        <td>{{ number_format($movimento->valor, 2, ',', '.') }}</td>
+        <td>
+            <!-- Botão de Visualizar -->
+            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal{{ $movimento->id }}" title="Visualizar">
+                <i class="fas fa-eye"></i>
+            </button>
+
+            <!-- Botão de Editar -->
+            <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $movimento->id }}" title="Editar">
+                <i class="fas fa-edit"></i>
+            </button>
+
+            <!-- Botão de Excluir -->
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $movimento->id }}" title="Excluir">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
+@endcomponent
+
+<!-- Modal de Novo Movimento -->
+<div class="modal fade" id="newMovementModal" tabindex="-1" aria-labelledby="newMovementModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newMovementModalLabel">Novo Movimento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('movimentos.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="despesa">Despesa</option>
+                            <option value="receita">Receita</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input type="date" class="form-control" id="data" name="data" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="forma_pagamento">Forma de Pagamento</label>
+                        <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
+                            <option value="boleto">Boleto</option>
+                            <option value="cartao">Cartão</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="transferencia">Transferência</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor">Valor</label>
+                        <input type="number" class="form-control" id="valor" name="valor" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="produto_servico_id">Produto ou Serviço</label>
+                        <select class="form-control" id="produto_servico_id" name="produto_servico_id" required>
+                            <!-- Aqui você vai preencher com produtos ou serviços disponíveis -->
+                            @foreach ($produtosServicos as $item)
+                            <option value="{{ $item->id }}">{{ $item->descricao }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="empresa_id">Empresa</label>
+                        <select class="form-control" id="empresa_id" name="empresa_id" required>
+                            @foreach ($empresas as $empresa)
+                            <option value="{{ $empresa->id }}">{{ $empresa->razao_social }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Visualização -->
+@foreach ($movimentos as $movimento)
+<div class="modal fade" id="viewModal{{ $movimento->id }}" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel{{ $movimento->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel{{ $movimento->id }}">Visualizar Movimento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Descrição:</strong> {{ $movimento->descricao }}</p>
+                <p><strong>Tipo:</strong> {{ $movimento->tipo }}</p>
+                <p><strong>Data:</strong> {{ \Carbon\Carbon::parse($movimento->data)->format('d/m/Y') }}</p>
+                <p><strong>Forma de Pagamento:</strong> {{ $movimento->forma_pagamento }}</p>
+                <p><strong>Valor:</strong> {{ number_format($movimento->valor, 2, ',', '.') }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<!-- Modal de Excluir -->
+@foreach ($movimentos as $movimento)
+<div class="modal fade" id="deleteModal{{ $movimento->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $movimento->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel{{ $movimento->id }}">Excluir Movimento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Você tem certeza que deseja excluir o movimento <strong>{{ $movimento->descricao }}</strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{{ route('movimentos.destroy', $movimento) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<!-- Modal de Editar Movimento -->
+@foreach ($movimentos as $movimento)
+<div class="modal fade" id="editModal{{ $movimento->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $movimento->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ $movimento->id }}">Editar Movimento</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('movimentos.update', $movimento->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="descricao">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" value="{{ $movimento->descricao }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo">Tipo</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="despesa" {{ $movimento->tipo == 'despesa' ? 'selected' : '' }}>Despesa</option>
+                            <option value="receita" {{ $movimento->tipo == 'receita' ? 'selected' : '' }}>Receita</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data">Data</label>
+                        <input type="date" class="form-control" id="data" name="data" value="{{ \Carbon\Carbon::parse($movimento->data)->format('Y-m-d') }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="forma_pagamento">Forma de Pagamento</label>
+                        <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
+                            <option value="boleto" {{ $movimento->forma_pagamento == 'boleto' ? 'selected' : '' }}>Boleto</option>
+                            <option value="cartao" {{ $movimento->forma_pagamento == 'cartao' ? 'selected' : '' }}>Cartão</option>
+                            <option value="dinheiro" {{ $movimento->forma_pagamento == 'dinheiro' ? 'selected' : '' }}>Dinheiro</option>
+                            <option value="transferencia" {{ $movimento->forma_pagamento == 'transferencia' ? 'selected' : '' }}>Transferência</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor">Valor</label>
+                        <input type="number" class="form-control" id="valor" name="valor" value="{{ $movimento->valor }}" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="produto_servico_id">Produto ou Serviço</label>
+                        <select class="form-control" id="produto_servico_id" name="produto_servico_id" required>
+                            @foreach ($produtosServicos as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $movimento->produto_servico_id ? 'selected' : '' }}>
+                                {{ $item->descricao }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="empresa_id">Empresa</label>
+                        <select class="form-control" id="empresa_id" name="empresa_id" required>
+                            @foreach ($empresas as $empresa)
+                            <option value="{{ $empresa->id }}" {{ $empresa->id == $movimento->empresa_id ? 'selected' : '' }}>
+                                {{ $empresa->razao_social }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
 @stop
 
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!"); </script>
+<script src="{{ asset('vendor/adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
+<script src="{{ asset('vendor/adminlte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
+<script>
+    $(function() {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+        });
+    });
+</script>
 @stop

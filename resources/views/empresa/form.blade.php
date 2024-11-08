@@ -20,7 +20,7 @@
 </div>
 @endif
 @php
-    $isEdit = isset($empresa); // Verifica se estamos em modo de edição
+$isEdit = isset($empresa); // Verifica se estamos em modo de edição
 @endphp
 
 <form method="POST" action="{{ $isEdit ? route('empresas.update', $empresa->id) : route('empresas.store') }}">
@@ -29,6 +29,21 @@
     @if ($isEdit)
     @method('PUT') <!-- Define o método PUT para a atualização -->
     @endif
+
+    <div class="form-group mb-3">
+        <label for="cnpj">CNPJ</label>
+        <div class="input-group">
+            <input type="text" class="form-control @error('cnpj') is-invalid @enderror" id="cnpj"
+                name="cnpj" value="{{ old('cnpj', $empresa->cnpj ?? '') }}" required>
+            <button class="btn btn-outline-secondary" type="button" id="search-cnpj" title="Buscar CNPJ">
+                <i class="fas fa-search"></i> <!-- Ícone da lupa -->
+            </button>
+        </div>
+        <small class="form-text text-muted">Digite o CNPJ e clique na lupa para pesquisar os dados automaticamente.</small>
+        @error('cnpj')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
 
     <div class="form-group mb-3">
         <label for="razao_social">Razão Social</label>
@@ -44,15 +59,6 @@
         <input type="text" class="form-control @error('fantasia') is-invalid @enderror" id="fantasia"
             name="fantasia" value="{{ old('fantasia', $empresa->fantasia ?? '') }}" required>
         @error('fantasia')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
-
-    <div class="form-group mb-3">
-        <label for="cnpj">CNPJ</label>
-        <input type="text" class="form-control @error('cnpj') is-invalid @enderror" id="cnpj"
-            name="cnpj" value="{{ old('cnpj', $empresa->cnpj ?? '') }}" required>
-        @error('cnpj')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
     </div>
@@ -85,6 +91,21 @@
     </div>
 
     <div class="form-group mb-3">
+        <label for="cep">CEP</label>
+        <div class="input-group">
+            <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
+                name="cep" value="{{ old('cep', $cliente->cep ?? '') }}">
+            <button type="button" class="btn btn-outline-secondary" id="buscarCep">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+        <small class="form-text text-muted">Digite o CEP e clique na lupa para pesquisar o endereço automaticamente.</small>
+        @error('cep')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    <div class="form-group mb-3">
         <label for="endereco">Endereço</label>
         <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco"
             name="endereco" value="{{ old('endereco', $empresa->endereco ?? '') }}">
@@ -111,14 +132,7 @@
         @enderror
     </div>
 
-    <div class="form-group mb-3">
-        <label for="cep">CEP</label>
-        <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
-            name="cep" value="{{ old('cep', $empresa->cep ?? '') }}">
-        @error('cep')
-        <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
-    </div>
+
 
     <button type="submit" class="btn btn-primary">
         {{ $isEdit ? 'Atualizar Empresa' : 'Cadastrar Empresa' }}
@@ -137,6 +151,67 @@
     $(document).ready(function() {
         $('#cnpj').mask('99.999.999/9999-99'); // Máscara para CNPJ
         $('#telefone').mask('(99) 99999-9999'); // Máscara para telefone
+
+        // Evento para buscar dados do CNPJ
+        $('#search-cnpj').on('click', function() {
+            const cnpj = $('#cnpj').val().replace(/[^\d]/g, ''); // Remove máscara para busca
+            if (cnpj.length !== 14) {
+                alert('Por favor, insira um CNPJ válido com 14 dígitos.');
+                return;
+            }
+            $.ajax({
+                url: `https://open.cnpja.com/office/${cnpj}`,
+                type: 'GET',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer YOUR_API_TOKEN'); // Substitua pelo token de autenticação
+                },
+                success: function(response) {
+                    if (response) {
+                        $('#razao_social').val(response.alias || '');
+                        $('#fantasia').val(response.alias || '');
+                        $('#email').val(response.emails[0].address || '');
+                        $('#telefone').val(response.phones[0].area+'' + response.phones[0].number || '');
+                        $('#endereco').val(response.address.street || '');
+                        $('#cidade').val(response.address.city || '');
+                        $('#estado').val(response.address.state || '');
+                        $('#cep').val(response.address.zip || '');
+                    } else {
+                        alert('Nenhum dado encontrado para o CNPJ fornecido.');
+                    }
+                },
+                error: function() {
+                    alert('Ocorreu um erro ao buscar o CNPJ. Por favor, tente novamente.');
+                }
+            });
+        });
     });
 </script>
+<script>
+    document.getElementById('buscarCep').addEventListener('click', function() {
+        var cep = document.getElementById('cep').value;
+
+        if (!cep) {
+            alert('Por favor, insira um CEP.');
+            return;
+        }
+
+        fetch(`/clientes/endereco/${cep}`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.erro) {
+                    document.getElementById('endereco').value = data.logradouro;
+                    document.getElementById('cidade').value = data.localidade;
+                    document.getElementById('estado').value = data.uf;
+                } else {
+                    alert('CEP não encontrado.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar o endereço:', error);
+                alert('Erro ao buscar o endereço. Tente novamente.');
+            });
+    });
+</script>
+
+
 @stop

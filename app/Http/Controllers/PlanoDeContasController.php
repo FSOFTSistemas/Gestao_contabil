@@ -58,13 +58,14 @@ class PlanoDeContasController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, PlanoDeContas $planoDeContas)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'descricao' => 'required|string|max:255',
             'tipo' => 'required|in:despesa,receita',
         ]);
 
+        $planoDeContas = PlanoDeContas::findOrFail($id);
         $planoDeContas->update($validatedData);
 
         return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas atualizado com sucesso!');
@@ -73,8 +74,11 @@ class PlanoDeContasController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(PlanoDeContas $planoDeContas)
+    public function destroy($id)
     {
-        //
+        $planoDeContas = PlanoDeContas::findOrFail($id);
+        $planoDeContas->delete();
+
+        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas deletado com sucesso!');
     }
 }

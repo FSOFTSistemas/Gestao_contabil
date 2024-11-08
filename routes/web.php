@@ -3,11 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\DreController;
 use App\Http\Controllers\FornecedorController;
 use App\Http\Controllers\MovimentoController;
 use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\PlanoDeContasController;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\UsuarioController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -26,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('movimentos', MovimentoController::class);
     Route::resource('planos-de-contas', PlanoDeContasController::class);
     Route::resource('settings', ConfigController::class);
+    Route::resource('dre', DreController::class);
+    Route::resource('usuarios', UsuarioController::class);
     Route::get('/seletor-empresa/{id}', [EmpresaController::class, 'selecionarEmpresa'])->name('seletor.empresa');
     Route::get('/clientes/endereco/{cep}', [ClienteController::class, 'buscarEnderecoPorCep']);
 

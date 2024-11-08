@@ -33,7 +33,6 @@ class FornecedorController extends Controller
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cnpj' => 'required|string|size:18',
             'email' => 'required|string|email|max:255',
             'telefone' => 'required|string|max:15',
             'endereco' => 'required|string|max:255',
@@ -56,39 +55,40 @@ class FornecedorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Fornecedor $fornecedor)
+    public function edit($id)
     {
-        $empresas = Empresa::all();
-        return view('fornecedor.form', compact('fornecedor', 'empresas'));
+        $fornecedor = Fornecedor::findOrFail($id);
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('fornecedores.form', ['fornecedor' => $fornecedor, 'empresas' => $empresas]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Fornecedor $fornecedor)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'nome' => 'required|string|max:255',
-            'cnpj' => 'required|string|unique:fornecedores,cnpj,' . $fornecedor->id . '|size:18',
             'email' => 'required|string|email|max:255',
             'telefone' => 'required|string|max:15',
             'endereco' => 'required|string|max:255',
             'empresa_id' => 'required|exists:empresas,id',
         ]);
-
+        $fornecedor = Fornecedor::findOrFail($id);
         $fornecedor->update($validatedData);
 
-        return redirect()->route('fornecedores.all')->with('success', 'Fornecedor atualizado com sucesso!');
+        return redirect()->route('fornecedores.index')->with('success', 'Fornecedor atualizado com sucesso!');
 
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Fornecedor $fornecedor)
+    public function destroy($id)
     {
+        $fornecedor = Fornecedor::findOrFail($id);
         $fornecedor->delete();
 
-        return redirect()->route('fornecedores.all')->with('success', 'Fornecedor removido com sucesso!');
+        return redirect()->route('fornecedores.index')->with('success', 'Fornecedor removido com sucesso!');
     }
 }
