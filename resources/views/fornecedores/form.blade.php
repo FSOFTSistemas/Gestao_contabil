@@ -9,7 +9,6 @@
 @section('content')
 
 <h2>{{ isset($fornecedor) ? 'Editar Fornecedor' : 'Cadastrar Fornecedor' }}</h2>
-
 <form action="{{ isset($fornecedor) ? route('fornecedores.update', $fornecedor->id) : route('fornecedores.store') }}" method="POST">
     @csrf
     @if(isset($fornecedor))
@@ -26,7 +25,7 @@
 
     <div class="mb-3">
         <label for="cnpj" class="form-label">CNPJ</label>
-        <input type="text" class="form-control @error('cnpj') is-invalid @enderror" id="cnpj" name="cnpj" value="{{ old('cnpj', $fornecedor->cnpj ?? '') }}" required>
+        <input type="text" class="form-control @error('cnpj') is-invalid @enderror" id="cnpj" name="cnpj" value="{{ old('cnpj', $fornecedor->cnpj ?? '') }}" >
         @error('cnpj')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
@@ -82,7 +81,7 @@
 <script>
     $(document).ready(function() {
         $('#cnpj').mask('00.000.000/0000-00');
-        $('#telefone').mask('(00) 0000-0000');
+        $('#telefone').mask('(00) 00000-0000');
     });
 </script>
 @endsection

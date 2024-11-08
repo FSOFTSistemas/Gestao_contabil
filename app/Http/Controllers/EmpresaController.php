@@ -13,7 +13,7 @@ class EmpresaController extends Controller
     public function index()
     {
         $empresas = Empresa::all();
-        return view('empresa.index',['empresas' => $empresas]);
+        return view('empresa.index', ['empresas' => $empresas]);
     }
 
     /**
@@ -50,7 +50,8 @@ class EmpresaController extends Controller
         //
     }
 
-    public function selecionarEmpresa($id) {
+    public function selecionarEmpresa($id)
+    {
         session(['empresa_id' => $id]);
         return redirect()->back()->with('success', 'Empresa selecionada com sucesso!');
     }
@@ -60,7 +61,8 @@ class EmpresaController extends Controller
      */
     public function edit(Empresa $empresa)
     {
-        //
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('empresa.form', compact('empresa', 'empresas'));
     }
 
     /**
@@ -68,14 +70,37 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, Empresa $empresa)
     {
-        //
+        $validatedData = $request->validate([
+            'razao_social' => 'required|string|max:255',
+            'fantasia' => 'required|string|max:255',
+            'cnpj' => 'required|string|max:20|unique:empresas,cnpj,' . $empresa->id,
+            'IE' => 'nullable|string|max:50',
+            'email' => 'required|email|max:255',
+            'telefone' => 'nullable|string|max:20',
+            'endereco' => 'nullable|string|max:255',
+            'cidade' => 'nullable|string|max:100',
+            'estado' => 'nullable|string|max:50',
+            'cep' => 'nullable|string|max:15',
+        ]);
+
+        $empresa = Empresa::findOrFail($empresa->id);
+
+        $empresa->update($validatedData);
+
+        return redirect()->route('empresas.index')
+            ->with('success', 'Empresa atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Empresa $empresa)
     {
-        //
+        try {
+
+            $empresa->delete();
+
+            return redirect()->route('empresas.index')->with('success', 'Empresa deletada com suscesso !');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao deletar empresa: ' . $e->getMessage());
+        }
     }
 }

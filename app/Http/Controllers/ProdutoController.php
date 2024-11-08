@@ -57,7 +57,8 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        return view('produtos.form', compact('produto'));
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('produto.form', compact('produto', 'empresas'));
     }
 
     /**
