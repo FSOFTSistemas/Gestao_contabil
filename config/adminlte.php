@@ -190,13 +190,13 @@ return [
     |
     */
 
-    'classes_body' => '',
+    'classes_body' => 'hold-transition sidebar-light',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
     'classes_content' => '',
-    'classes_sidebar' => 'sidebar-dark-primary elevation-4',
+    'classes_sidebar' => 'sidebar-light-primary',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
@@ -299,47 +299,59 @@ return [
     */
 
     'menu' => [
-        [
-            'text' => 'Home',
-            'url' => 'home',
-            'icon' => 'fas fa-fw fa-home',
-            'label_color' => 'success',
-        ],
-        [
-            'header' => 'Gestão',
-            'can' => 'manage-gestao',
-        ],
-        [
-            'text' => 'Clientes',
-            'url' => 'clientes',
-            'icon' => 'fas fa-users',
-        ],
-        [
-            'text' => 'Fornecedores',
-            'url' => 'fornecedores',
-            'icon' => 'fas fa-truck',
-        ],
-        [
-            'text' => 'Produtos e Serviços',
-            'url' => 'produtos',
-            'icon' => 'fas fa-box',
-        ],
-        [
-            'text' => 'Movimentos',
-            'url' => 'movimentos',
-            'icon' => 'fas fa-exchange-alt',
-        ],
-        [
-            'text' => 'Planos de Contas',
-            'url' => 'planos-de-contas',
-            'icon' => 'fas fa-list-alt',
-        ],
-        [
-            'text' => 'Configurações',
-            'url' => 'settings',
-            'icon' => 'fas fa-cogs',
-        ],
+    [
+        'text' => 'Home',
+        'url' => 'home',
+        'icon' => 'fas fa-fw fa-home',
+        'label_color' => 'success',
     ],
+    [
+        'header' => 'Gestão',
+        'can' => 'manage-gestao',
+    ],
+    [
+        'text' => 'DRE',
+        'url' => 'dre',
+        'icon' => 'fas fa-chart-line',
+    ],
+    [
+        'text' => 'Clientes',
+        'url' => 'clientes',
+        'icon' => 'fas fa-users',
+    ],
+    [
+        'text' => 'Fornecedores',
+        'url' => 'fornecedores',
+        'icon' => 'fas fa-truck',
+    ],
+    [
+        'text' => 'Produtos e Serviços',
+        'url' => 'produtos',
+        'icon' => 'fas fa-box',
+    ],
+    [
+        'text' => 'Movimentos',
+        'url' => 'movimentos',
+        'icon' => 'fas fa-exchange-alt',
+    ],
+    [
+        'text' => 'Planos de Contas',
+        'url' => 'planos-de-contas',
+        'icon' => 'fas fa-list-alt',
+    ],
+    [
+        'text' => 'Configurações',
+        'url' => 'settings',
+        'icon' => 'fas fa-cogs',
+    ],
+    [
+        'text' => 'Usuários',
+        'url' => 'usuarios',
+        'icon' => 'fas fa-users-cog',
+    ],
+
+],
+
 
     /*
     |--------------------------------------------------------------------------
