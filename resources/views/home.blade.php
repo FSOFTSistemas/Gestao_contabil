@@ -42,7 +42,7 @@
         <!-- small box -->
         <div class="small-box bg-info">
             <div class="inner">
-                <h3>150</h3>
+                <h3>{{ $clientes }}</h3>
 
                 <p>Clientes</p>
             </div>
@@ -57,7 +57,7 @@
         <!-- small box -->
         <div class="small-box bg-success">
             <div class="inner">
-                <h3>53</h3>
+                <h3><sup style="font-size: 20px">R$</sup>{{ $totalReceitas }}</h3>
 
                 <p>Total de receitas</p>
             </div>
@@ -72,7 +72,7 @@
         <!-- small box -->
         <div class="small-box bg-warning">
             <div class="inner">
-                <h3>44</h3>
+                <h3>{{ $fornecedores }}</h3>
 
                 <p>Fornecedores</p>
             </div>
@@ -87,7 +87,7 @@
         <!-- small box -->
         <div class="small-box bg-danger">
             <div class="inner">
-                <h3>65</h3>
+                <h3><sup style="font-size: 20px">R$</sup>{{ $totalDespesas }}</h3>
 
                 <p>Total de despesas</p>
             </div>
@@ -113,7 +113,7 @@
                 <!-- tools card -->
                 <div class="card-tools">
                     <!-- button with a dropdown -->
-                    <div class="btn-group">
+                    <!-- <div class="btn-group">
                         <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
                             <i class="fas fa-bars"></i>
                         </button>
@@ -123,7 +123,7 @@
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item">View calendar</a>
                         </div>
-                    </div>
+                    </div> -->
                     <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>

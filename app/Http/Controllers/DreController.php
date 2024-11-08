@@ -11,9 +11,18 @@ class DreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('DRE.index');
+        $empresaId = session('empresa_id');
+
+
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
+
+  
+        $dre = Dre::obterDre($empresaId, $dataInicio, $dataFim);
+
+        return view('DRE.index', ['dre' => $dre]);
     }
 
     /**
