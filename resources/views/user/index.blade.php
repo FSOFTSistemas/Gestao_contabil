@@ -169,6 +169,22 @@
                             <option value="user">Usuário</option>
                         </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="empresa_id" class="form-label">Empresa</label>
+                        <select class="form-control @error('empresa_id') is-invalid @enderror" id="empresa_id" name="empresa_id" required>
+                            <option value="">Selecione uma empresa</option>
+                            @foreach($empresas as $empresa)
+                            <option value="{{ $empresa->id }}">
+                                {{ $empresa->razao_social }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <small style="color: red">Atenção: selecione a empresa</small>
+                        @error('empresa_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use App\Http\Controllers\Controller;
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,8 @@ class UsuarioController extends Controller
     public function index()
     {
         $usuarios = User::all();
-        return view('user.index', compact('usuarios'));
+        $empresas = Empresa::where('id', session('empresa_id'))->get();
+        return view('user.index', compact('usuarios','empresas'));
     }
 
     /**
@@ -32,21 +34,32 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'role' => 'required|string|in:admin,user',
-        ]);
+        try
+        {
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-        ]);
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:6',
+                'role' => 'required|string|in:admin,user',
+                'empresa_id' => 'required',
+            ]);
 
-        return redirect()->route('usuarios.index')->with('success', 'Usuário criado com sucesso!');
+
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+                'empresa_id' => $request->empresa_id,
+            ]);
+
+            return redirect()->route('usuarios.index')->with('success', 'Usuário criado com sucesso!');
+        }catch(\Exception $e)
+        {
+            // dd($e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao salvar usuario: '.$e->getMessage());
+        }
     }
 
     /**
