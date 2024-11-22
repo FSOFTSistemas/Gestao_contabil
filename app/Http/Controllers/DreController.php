@@ -19,7 +19,7 @@ class DreController extends Controller
         $dataInicio = $request->input('data_inicio');
         $dataFim = $request->input('data_fim');
 
-  
+
         $dre = Dre::obterDre($empresaId, $dataInicio, $dataFim);
 
         return view('DRE.index', ['dre' => $dre]);
@@ -71,5 +71,25 @@ class DreController extends Controller
     public function destroy(Dre $dre)
     {
         //
+    }
+
+    public function dre(Request $request){
+        
+
+        $dre = [
+            'receita_bruta' => 100000,
+            'impostos' => 15000,
+            'receita_liquida' => 85000,
+            'custos' => 40000,
+            'lucro_bruto' => 45000,
+            'despesas_operacionais' => 15000,
+            'lucro_operacional' => 30000,
+            'despesas_financeiras' => 5000,
+            'lucro_antes_impostos' => 25000,
+            'impostos_sobre_lucro' => 7500,
+            'lucro_liquido' => 17500,
+        ];
+
+        return view('dre.rel', compact('dre'));
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Fornecedor;
 use App\Models\Movimento;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -29,18 +30,19 @@ class HomeController extends Controller
     public function index()
     {
         $empresas = Empresa::all();
-        $empresaId = session('empresa_id');
+        $empresaId = Auth::user()->empresa_id;
 
-        if (!$empresaId) {
-            $clientes = 0;
-            $fornecedores = 0;
-            $totalDespesas = 0;
-            $totalReceitas = 0;
-        } else {
+        if ($empresaId > 1){
+            session()->put('empresa_id', $empresaId);
             $clientes = Cliente::where('empresa_id', $empresaId)->count();
             $fornecedores = Fornecedor::where('empresa_id', $empresaId)->count();
             $totalDespesas = Movimento::where('tipo', 'despesa')->where('empresa_id', $empresaId)->sum('valor');
             $totalReceitas = Movimento::where('tipo', 'receita')->where('empresa_id', $empresaId)->sum('valor');
+        }else{
+            $clientes = 0;
+            $fornecedores = 0;
+            $totalDespesas = 0;
+            $totalReceitas = 0;
         }
 
         return view('home', [
