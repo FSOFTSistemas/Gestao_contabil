@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('usuarios', UsuarioController::class)->middleware(['role:admin']);
     Route::get('/seletor-empresa/{id}', [EmpresaController::class, 'selecionarEmpresa'])->name('seletor.empresa');
     Route::get('/clientes/endereco/{cep}', [ClienteController::class, 'buscarEnderecoPorCep']);
+    Route::get('/cmv', [DreController::class, 'cmv'])->name('cmv');
 
 
 });

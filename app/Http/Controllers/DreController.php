@@ -73,7 +73,8 @@ class DreController extends Controller
         //
     }
 
-    public function dre(Request $request){
+    public function dre(Request $request)
+    {
         
 
         $dre = [
@@ -91,5 +92,11 @@ class DreController extends Controller
         ];
 
         return view('dre.rel', compact('dre'));
+    }
+
+    public function cmv()
+    {
+        $resultados = [];
+        return view('dre.cmv', compact('resultados'));
     }
 }

@@ -36,11 +36,10 @@ class MovimentoController extends Controller
         // Validação dos dados
         $request->validate([
             'descricao' => 'required|string|max:255',
-            'tipo' => 'required|in:despesa,receita',
+            'tipo' => 'required|in:Despesa,Receita,cmv',
             'data' => 'required|date',
             'forma_pagamento' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0',
-            'produto_servico_id' => 'required|exists:produtos,id',
             'empresa_id' => 'required|exists:empresas,id',
         ]);
 
@@ -51,7 +50,6 @@ class MovimentoController extends Controller
             'data' => $request->data,
             'forma_pagamento' => $request->forma_pagamento,
             'valor' => $request->valor,
-            'produto_servico_id' => $request->produto_servico_id,
             'empresa_id' => $request->empresa_id,
         ]);
 
@@ -89,7 +87,6 @@ class MovimentoController extends Controller
             'data' => 'required|date',
             'forma_pagamento' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0',
-            'produto_servico_id' => 'required|exists:produtos,id',
             'empresa_id' => 'required|exists:empresas,id',
         ]);
 
@@ -100,7 +97,6 @@ class MovimentoController extends Controller
             'data' => $request->data,
             'forma_pagamento' => $request->forma_pagamento,
             'valor' => $request->valor,
-            'produto_servico_id' => $request->produto_servico_id,
             'empresa_id' => $request->empresa_id,
         ]);
 

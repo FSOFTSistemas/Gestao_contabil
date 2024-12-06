@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             EmpresaSeeder::class,
             // FornecedorSeeder::class,
-            // PlanoDeContasSeeder::class,
+            PlanoDeContasSeeder::class,
             // ProdutoSeeder::class,
             // ServicoSeeder::class,
             // MovimentoSeeder::class,

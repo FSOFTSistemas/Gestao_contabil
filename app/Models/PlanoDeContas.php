@@ -10,6 +10,7 @@ class PlanoDeContas extends Model
     use HasFactory;
 
     protected $fillable = [
+        'codigo',
         'descricao',
         'tipo',
     ];

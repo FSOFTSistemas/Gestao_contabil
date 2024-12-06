@@ -316,11 +316,17 @@ return [
         'can' => 'acesso total',
     ],
     [
+        'text' => 'CMV',
+        'url' => 'cmv',
+        'icon' => 'fas fa-chart-line',
+        'can' => 'acesso total',
+    ],   
+    [
         'text' => 'Clientes',
         'url' => 'clientes',
         'icon' => 'fas fa-users',
         'can' => 'acesso total',
-    ],
+    ], 
     [
         'text' => 'Fornecedores',
         'url' => 'fornecedores',
@@ -328,13 +334,13 @@ return [
         'can' => 'acesso total',
     ],
     [
-        'text' => 'Produtos e Serviços',
+        'text' => 'Produtos / Serviços',
         'url' => 'produtos',
         'icon' => 'fas fa-box',
         'can' => 'acesso total',
     ],
     [
-        'text' => 'Movimentos',
+        'text' => 'Fluxo de Caixa',
         'url' => 'movimentos',
         'icon' => 'fas fa-exchange-alt',
         'can' => 'acesso total',

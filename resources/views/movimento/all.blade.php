@@ -7,10 +7,16 @@
 @stop
 
 @section('content')
-<div class="row" style="margin-bottom: 2%">
-    <div class="col">
-        <!-- Botão para abrir o modal de novo movimento -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMovementModal">+ Novo Movimento</button>
+<div class="row mb-3">
+    <div class="col d-flex justify-content-start">
+        <!-- Botão para abrir o modal de nova venda -->
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#newMovementModal">
+            + Nova Venda
+        </button>
+        <!-- Botão para abrir o modal de nova despesa -->
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#newExpenseModal">
+            Adicionar Despesa
+        </button>
     </div>
 </div>
 
@@ -83,7 +89,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newMovementModalLabel">Novo Movimento</h5>
+                <h5 class="modal-title" id="newMovementModalLabel">Novo Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -158,7 +164,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel{{ $movimento->id }}">Visualizar Movimento</h5>
+                <h5 class="modal-title" id="viewModalLabel{{ $movimento->id }}">Visualizar Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -184,7 +190,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel{{ $movimento->id }}">Excluir Movimento</h5>
+                <h5 class="modal-title" id="deleteModalLabel{{ $movimento->id }}">Excluir Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -211,7 +217,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ $movimento->id }}">Editar Movimento</h5>
+                <h5 class="modal-title" id="editModalLabel{{ $movimento->id }}">Editar Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
