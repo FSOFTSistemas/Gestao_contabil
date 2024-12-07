@@ -124,9 +124,15 @@
                     <div class="form-group">
                         <label for="forma_pagamento">Forma de Pagamento</label>
                         <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
-                            <option value="cartao">Cartão</option>
                             <option value="dinheiro">Dinheiro</option>
+                            <option value="cartao">Cartão</option>
                         </select>
+                    </div>
+
+                    <!-- Campo de Vencimento (será exibido apenas se a forma de pagamento for 'cartao') -->
+                    <div class="form-group" id="vencimento_div" style="display: none;">
+                        <label for="vencimento">Data de Vencimento</label>
+                        <input type="date" class="form-control" id="vencimento" name="vencimento">
                     </div>
 
                     <div class="form-group">
@@ -151,6 +157,19 @@
         </div>
     </div>
 </div>
+<script>
+    // Script para exibir o campo de vencimento se a forma de pagamento for 'cartao'
+    document.getElementById('forma_pagamento').addEventListener('change', function () {
+        var formaPagamento = this.value;
+        var vencimentoDiv = document.getElementById('vencimento_div');
+
+        if (formaPagamento === 'cartao') {
+            vencimentoDiv.style.display = 'block'; // Exibe o campo de vencimento
+        } else {
+            vencimentoDiv.style.display = 'none'; // Oculta o campo de vencimento
+        }
+    });
+</script>
 
 <!-- Modal de Visualização -->
 @foreach ($movimentos as $movimento)
