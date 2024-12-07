@@ -117,14 +117,14 @@ class DreController extends Controller
             'lucro_liquido' => 0,
         ];
 
-        return view('dre.rel', compact('dre'));
+        return view('DRE.rel', compact('dre'));
     }
 
     public function cmv()
     {
         
         $resultados = [];
-        return view('dre.cmv', compact('resultados'));
+        return view('DRE.cmv', compact('resultados'));
     }
 
     public function cmv_filtro(Request $request)
@@ -141,6 +141,6 @@ class DreController extends Controller
 
 
         $resultados = Movimento::where('tipo','cmv')->get();
-        return view('dre.cmv', compact('resultados'));
+        return view('DRE.cmv', compact('resultados'));
     }
 }
