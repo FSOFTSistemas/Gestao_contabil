@@ -32,6 +32,36 @@
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json'
             },
+            dom: 'Bfrtip', // Habilita a exibição de botões
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    text: 'Copiar',
+                    titleAttr: 'Copiar para a área de transferência',
+                },
+                {
+                    extend: 'excelHtml5',
+                    text: 'Excel',
+                    titleAttr: 'Exportar para Excel',
+                },
+                {
+                    extend: 'csvHtml5',
+                    text: 'CSV',
+                    titleAttr: 'Exportar para CSV',
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: 'PDF',
+                    titleAttr: 'Exportar para PDF',
+                    orientation: 'landscape', // Orientação do PDF
+                    pageSize: 'A4' // Tamanho da página
+                },
+                {
+                    extend: 'print',
+                    text: 'Imprimir',
+                    titleAttr: 'Imprimir tabela',
+                }
+            ],
         });
     </script>
 @endsection

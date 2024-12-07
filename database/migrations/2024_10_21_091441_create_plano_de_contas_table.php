@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('plano_de_contas', function (Blueprint $table) {
             $table->id();
+            $table->string('codigo');
             $table->string('descricao');
-            $table->enum('tipo', ['receita', 'despesa']);
+            $table->enum('tipo', ['CMV','Receita', 'Despesa']);
             $table->timestamps();
         });
     }

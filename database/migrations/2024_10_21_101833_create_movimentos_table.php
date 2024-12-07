@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('movimentos', function (Blueprint $table) {
             $table->id();
             $table->text('descricao')->nullable();
-            $table->enum('tipo', ['receita', 'despesa']);
+            $table->enum('tipo', ['receita', 'despesa','cmv']);
             $table->date('data');
             $table->string('forma_pagamento');
             $table->decimal('valor', 10, 2);
             $table->foreignId('produto_servico_id')->nullable()->constrained('produtos')->onDelete('set null');
             $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade'); 
+            $table->foreignId('planodecontas_id')->constrained('plano_de_contas')->onDelete('cascade'); 
             $table->timestamps();
         });
     }

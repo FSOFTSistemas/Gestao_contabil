@@ -7,10 +7,12 @@
 @stop
 
 @section('content')
-<div class="row" style="margin-bottom: 2%">
-    <div class="col">
-        <!-- Botão para abrir o modal de novo movimento -->
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newMovementModal">+ Novo Movimento</button>
+<div class="row mb-3">
+    <div class="col d-flex justify-content-start">
+        <!-- Botão para abrir o modal de nova venda -->
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#newMovementModal">
+            + Novo Movimento
+        </button>
     </div>
 </div>
 
@@ -83,7 +85,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="newMovementModalLabel">Novo Movimento</h5>
+                <h5 class="modal-title" id="newMovementModalLabel">Novo Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -101,6 +103,16 @@
                         <select class="form-control" id="tipo" name="tipo" required>
                             <option value="despesa">Despesa</option>
                             <option value="receita">Receita</option>
+                            <option value="cmv">CMV</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="planodecontas">Plano de contas</label>
+                        <select class="form-control" id="planodecontas" name="planodecontas" required>
+                            @foreach ($planodecontas as $plano)
+                            <option value="{{ $plano->id }}">{{ $plano->descricao }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -112,10 +124,8 @@
                     <div class="form-group">
                         <label for="forma_pagamento">Forma de Pagamento</label>
                         <select class="form-control" id="forma_pagamento" name="forma_pagamento" required>
-                            <option value="boleto">Boleto</option>
                             <option value="cartao">Cartão</option>
                             <option value="dinheiro">Dinheiro</option>
-                            <option value="transferencia">Transferência</option>
                         </select>
                     </div>
 
@@ -125,18 +135,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="produto_servico_id">Produto ou Serviço</label>
-                        <select class="form-control" id="produto_servico_id" name="produto_servico_id" required>
-                            <!-- Aqui você vai preencher com produtos ou serviços disponíveis -->
-                            @foreach ($produtosServicos as $item)
-                            <option value="{{ $item->id }}">{{ $item->descricao }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="empresa_id">Empresa</label>
-                        <select class="form-control" id="empresa_id" name="empresa_id" required>
+                        {{-- <label for="empresa_id">Empresa</label> --}}
+                        <select class="form-control" id="empresa_id" name="empresa_id" hidden required>
                             @foreach ($empresas as $empresa)
                             <option value="{{ $empresa->id }}">{{ $empresa->razao_social }}</option>
                             @endforeach
@@ -158,7 +158,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel{{ $movimento->id }}">Visualizar Movimento</h5>
+                <h5 class="modal-title" id="viewModalLabel{{ $movimento->id }}">Visualizar Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -184,7 +184,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel{{ $movimento->id }}">Excluir Movimento</h5>
+                <h5 class="modal-title" id="deleteModalLabel{{ $movimento->id }}">Excluir Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -211,7 +211,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel{{ $movimento->id }}">Editar Movimento</h5>
+                <h5 class="modal-title" id="editModalLabel{{ $movimento->id }}">Editar Movimento/Venda</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -230,6 +230,16 @@
                         <select class="form-control" id="tipo" name="tipo" required>
                             <option value="despesa" {{ $movimento->tipo == 'despesa' ? 'selected' : '' }}>Despesa</option>
                             <option value="receita" {{ $movimento->tipo == 'receita' ? 'selected' : '' }}>Receita</option>
+                            <option value="cmv" {{ $movimento->tipo == 'cmv' ? 'selected' : '' }}>CMV</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="planodecontas">Plano de contas</label>
+                        <select class="form-control" id="planodecontas" name="planodecontas" required>
+                            @foreach ($planodecontas as $plano)
+                            <option value="{{ $plano->id }}" {{ $plano->id == $movimento->planodecontas_id ? 'selected' : '' }}>{{ $plano->descricao }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -254,19 +264,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="produto_servico_id">Produto ou Serviço</label>
-                        <select class="form-control" id="produto_servico_id" name="produto_servico_id" required>
-                            @foreach ($produtosServicos as $item)
-                            <option value="{{ $item->id }}" {{ $item->id == $movimento->produto_servico_id ? 'selected' : '' }}>
-                                {{ $item->descricao }}
-                            </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="empresa_id">Empresa</label>
-                        <select class="form-control" id="empresa_id" name="empresa_id" required>
+                        {{-- <label for="empresa_id">Empresa</label> --}}
+                        <select class="form-control" id="empresa_id" name="empresa_id" hidden required>
                             @foreach ($empresas as $empresa)
                             <option value="{{ $empresa->id }}" {{ $empresa->id == $movimento->empresa_id ? 'selected' : '' }}>
                                 {{ $empresa->razao_social }}

@@ -12,7 +12,7 @@ class PlanoDeContasController extends Controller
      */
     public function index()
     {
-        $planoDeContas = PlanoDeContas::all();
+        $planoDeContas = PlanoDeContas::orderBy('descricao', 'asc')->get();
         return view('planodecontas.all', ['planodecontas' => $planoDeContas]);
     }
 
@@ -30,6 +30,7 @@ class PlanoDeContasController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'codigo' => 'required',
             'descricao' => 'required|string|max:255',
             'tipo' => 'required|in:despesa,receita',
         ]);

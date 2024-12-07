@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use App\Models\Movimento;
+use App\Models\PlanoDeContas;
 use App\Models\Produto;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,8 @@ class MovimentoController extends Controller
         $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
         $produtosServicos = Produto::where('empresa_id', session('empresa_id'))->get();
         $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas]);
+        $planodecontas = PlanoDeContas::orderBy('descricao', 'asc')->get();
+        return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas, 'planodecontas' => $planodecontas]);
     }
 
     /**
@@ -33,29 +35,33 @@ class MovimentoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validação dos dados
+        try
+        {
         $request->validate([
             'descricao' => 'required|string|max:255',
-            'tipo' => 'required|in:despesa,receita',
+            'tipo' => 'required|in:despesa,receita,cmv',
             'data' => 'required|date',
             'forma_pagamento' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0',
-            'produto_servico_id' => 'required|exists:produtos,id',
             'empresa_id' => 'required|exists:empresas,id',
+            'planodecontas' => 'required',
         ]);
 
-        // Criar o movimento
         Movimento::create([
             'descricao' => $request->descricao,
             'tipo' => $request->tipo,
             'data' => $request->data,
             'forma_pagamento' => $request->forma_pagamento,
             'valor' => $request->valor,
-            'produto_servico_id' => $request->produto_servico_id,
             'empresa_id' => $request->empresa_id,
+            'planodecontas_id' => $request->planodecontas,
         ]);
 
         return redirect()->route('movimentos.index')->with('success', 'Movimento criado com sucesso!');
+    }catch(\Exception $e)
+    {
+        // dd($e->getMessage());
+    }
     }
 
     /**
@@ -89,8 +95,8 @@ class MovimentoController extends Controller
             'data' => 'required|date',
             'forma_pagamento' => 'required|string|max:255',
             'valor' => 'required|numeric|min:0',
-            'produto_servico_id' => 'required|exists:produtos,id',
             'empresa_id' => 'required|exists:empresas,id',
+            'planodecontas_id' => 'required',
         ]);
 
         // Atualizar o movimento
@@ -100,8 +106,8 @@ class MovimentoController extends Controller
             'data' => $request->data,
             'forma_pagamento' => $request->forma_pagamento,
             'valor' => $request->valor,
-            'produto_servico_id' => $request->produto_servico_id,
             'empresa_id' => $request->empresa_id,
+            'planodecontas_id' => $request->planodecontas
         ]);
 
         return redirect()->route('movimentos.index')->with('success', 'Movimento atualizado com sucesso!');

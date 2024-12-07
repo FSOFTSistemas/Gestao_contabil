@@ -142,6 +142,14 @@
                 <form action="{{ route('planos-de-contas.store') }}" method="POST">
                     @csrf
 
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código</label>
+                        <input type="text" class="form-control @error('codigo') is-invalid @enderror" id="codigo" name="codigo" value="{{ old('codigo') }}" required>
+                        @error('codigo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <!-- Campo Descrição -->
                     <div class="mb-3">
                         <label for="descricao" class="form-label">Descrição</label>
@@ -156,8 +164,9 @@
                         <label for="tipo" class="form-label">Tipo</label>
                         <select class="form-control @error('tipo') is-invalid @enderror" id="tipo" name="tipo" required>
                             <option value="">Selecione o Tipo</option>
-                            <option value="despesa" >Despesa</option>
-                            <option value="receita" >Receita</option>
+                            <option value="Despesa" >Despesa</option>
+                            <option value="Receita" >Receita</option>
+                            <option value="CMV" >CMV</option>
                         </select>
                         @error('tipo')
                         <div class="invalid-feedback">{{ $message }}</div>
