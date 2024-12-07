@@ -4,6 +4,15 @@
 
 <table id="{{ $uniqueId }}" style="width: 100%">
     {{ $slot }}
+    @if (isset($showTotal) && $showTotal)
+        <tfoot>
+            <tr>
+                <td colspan="4"><strong>Total</strong></td>
+                <td id="total"><strong>R$ 0,00</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    @endif
 </table>
 
 @section('css')
@@ -25,14 +34,17 @@
     </script>
 
     <script>
-        $('#{{ $uniqueId }}').DataTable({
+
+        var valueColumnIndex = {{ $valueColumnIndex }};
+
+        var table = $('#{{ $uniqueId }}').DataTable({
             responsive: true,
             pageLength: {{ $itemsPerPage }},
             columnDefs: {{ Js::from($responsive) }},
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/pt-BR.json'
             },
-            dom: 'Bfrtip', // Habilita a exibição de botões
+            dom: 'Bfrtip', 
             buttons: [
                 {
                     extend: 'copyHtml5',
@@ -53,8 +65,8 @@
                     extend: 'pdfHtml5',
                     text: 'PDF',
                     titleAttr: 'Exportar para PDF',
-                    orientation: 'landscape', // Orientação do PDF
-                    pageSize: 'A4' // Tamanho da página
+                    orientation: 'landscape', 
+                    pageSize: 'A4' 
                 },
                 {
                     extend: 'print',
@@ -62,6 +74,42 @@
                     titleAttr: 'Imprimir tabela',
                 }
             ],
+            
+        });
+        
+
+        function calculateTotal() {
+            console.log("Calculando o total..."); 
+            var total = 0;
+
+            table.rows({ filter: 'applied' }).every(function() {
+                var data = this.data();
+                var value = data[valueColumnIndex]; 
+                if (typeof value === 'string') {
+                    value = value.replace(/\./g, '').replace(',', '.');
+                }
+                value = parseFloat(value); 
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+
+            $('#total').html('<strong>' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</strong>');
+        }
+
+        table.on('draw', function() {
+            console.log("Evento draw chamado"); 
+            calculateTotal();
+        });
+
+        table.on('search', function() {
+            console.log("Evento search chamado"); 
+            calculateTotal();
+        });
+
+        table.on('init', function() {
+            console.log("Tabela inicializada"); 
+            calculateTotal();
         });
     </script>
 @endsection

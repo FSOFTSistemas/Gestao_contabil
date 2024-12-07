@@ -37,6 +37,8 @@
             ]
         ],
         'itemsPerPage' => 50,
+        'showTotal' => false,
+        'valueColumnIndex' => 4,
     ])
     <thead class="table-primary">
         <tr>

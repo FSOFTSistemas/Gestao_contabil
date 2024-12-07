@@ -43,6 +43,8 @@
             @component('components.data-table', [
                 'uniqueId' => 'cmvTable',
                 'itemsPerPage' => 50,
+                'showTotal' => false,
+                'valueColumnIndex' => 4,
                 'responsive' => [],
             ])
                 <thead>
