@@ -11,6 +11,7 @@ use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\PlanoDeContasController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\PatrimonioController;
+use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\UsuarioController;
 
 Route::get('/', function () {
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cmv/filtro', [DreController::class, 'cmv_filtro'])->name('filtro_cmv');
     Route::resource('patrimonios', PatrimonioController::class);
     Route::resource('contas-a-pagar', ContasAPagarController::class);
+    Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
 
 
 });

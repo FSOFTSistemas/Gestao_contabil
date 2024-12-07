@@ -7,7 +7,6 @@
 @stop
 
 @section('content')
-    <!-- Filtros de Data e Tipo de Relatório -->
     <form action="{{ route('relatorios.index') }}" method="GET">
         <div class="row mb-3">
             <div class="col-md-4">
@@ -30,19 +29,13 @@
         <button type="submit" class="btn btn-primary">Filtrar</button>
     </form>
 
-    <!-- Gráficos (Exemplo com Chart.js) -->
     <div class="row mt-4">
         <div class="col-md-12">
             <canvas id="myChart"></canvas>
         </div>
     </div>
 
-    <!-- Tabela de Relatórios (DataTable) -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <x-datatable :items="$relatorios" :columns="['ID', 'Data', 'Descrição', 'Valor', 'Ações']" />
-        </div>
-    </div>
+    
 @stop
 
 @section('css')
