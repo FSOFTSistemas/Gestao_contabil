@@ -13,7 +13,8 @@
             <h5>Filtros</h5>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('cmv') }}">
+            <form method="POST" action="{{ route('filtro_cmv') }}">
+                @csrf
                 <div class="row">
                     <div class="col-md-4">
                         <label for="start_date" class="form-label">Data Inicial</label>
@@ -22,10 +23,6 @@
                     <div class="col-md-4">
                         <label for="end_date" class="form-label">Data Final</label>
                         <input type="date" name="end_date" class="form-control" id="end_date">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="product" class="form-label">Produto</label>
-                        <input type="text" name="product" class="form-control" id="product" placeholder="Buscar produto">
                     </div>
                 </div>
                 <div class="mt-3">
@@ -45,29 +42,24 @@
         <div class="card-body">
             @component('components.data-table', [
                 'uniqueId' => 'cmvTable',
-                'itemsPerPage' => 10,
+                'itemsPerPage' => 50,
                 'responsive' => [],
             ])
                 <thead>
                     <tr>
-                        <th>Produto</th>
-                        <th>Quantidade Vendida</th>
-                        <th>Custo Unitário</th>
-                        <th>Receita Total</th>
-                        <th>CMV Total</th>
-                        <th>Margem de Lucro</th>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Renderizar resultados dinâmicos aqui --}}
                     @foreach ($resultados as $resultado)
                         <tr>
-                            <td>{{ $resultado->produto }}</td>
-                            <td>{{ $resultado->quantidade }}</td>
-                            <td>{{ number_format($resultado->custo_unitario, 2, ',', '.') }}</td>
-                            <td>{{ number_format($resultado->receita_total, 2, ',', '.') }}</td>
-                            <td>{{ number_format($resultado->cmv_total, 2, ',', '.') }}</td>
-                            <td>{{ number_format($resultado->margem_lucro, 2, ',', '.') }}</td>
+                            <td>{{ $resultado->data }}</td>
+                            <td>{{ $resultado->descricao }}</td>
+                            <td>{{ number_format($resultado->valor, 2, ',', '.') }}</td>
+                            <td></td>
                         </tr>
                     @endforeach
                 </tbody>

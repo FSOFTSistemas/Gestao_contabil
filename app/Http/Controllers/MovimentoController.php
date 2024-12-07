@@ -60,7 +60,7 @@ class MovimentoController extends Controller
         return redirect()->route('movimentos.index')->with('success', 'Movimento criado com sucesso!');
     }catch(\Exception $e)
     {
-        dd($e->getMessage());
+        // dd($e->getMessage());
     }
     }
 
