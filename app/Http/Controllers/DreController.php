@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dre;
 use App\Http\Controllers\Controller;
+use App\Models\Movimento;
 use Illuminate\Http\Request;
 
 class DreController extends Controller
@@ -75,6 +76,24 @@ class DreController extends Controller
 
     public function dre(Request $request)
     {
+        $empresaId = session('empresa_id');
+
+        $totalDespesasOperacionais = Movimento::join('plano_de_contas', 'movimentos.plano_de_contas_id', '=', 'plano_de_contas.id')
+        ->where('plano_de_contas.codigo', '>', 3) 
+        ->where('plano_de_contas.codigo', '<', 4)  
+        ->where('movimentos.empresa_id', $empresaId)
+        ->whereBetween('movimentos.data', [$startDate, $endDate])
+        ->sum('movimentos.total');  
+
+        $totalReceita = Movimento::where('empresa_id', $empresaId)
+        ->whereBetween('data', [$startDate, $endDate])
+        ->where('tipo', 'receita')  // Filtra por tipo 'receita'
+        ->sum('total'); 
+
+        $totalDespesa = Movimento::where('empresa_id', $empresaId)
+        ->whereBetween('data', [$startDate, $endDate])
+        ->where('tipo', 'despesa')  // Filtra por tipo 'despesa'
+        ->sum('total'); 
         
 
         $dre = [

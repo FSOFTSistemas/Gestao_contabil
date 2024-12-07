@@ -17,6 +17,7 @@ class Movimento extends Model
         'valor',
         'produto_servico_id',
         'empresa_id',
+        'planodecontas_id',
     ];
 
 

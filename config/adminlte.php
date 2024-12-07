@@ -340,7 +340,7 @@ return [
         'can' => 'acesso total',
     ],
     [
-        'text' => 'Fluxo de Caixa',
+        'text' => 'Movimento',
         'url' => 'movimentos',
         'icon' => 'fas fa-exchange-alt',
         'can' => 'acesso total',
