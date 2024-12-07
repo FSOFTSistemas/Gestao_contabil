@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ContasAPagar;
 use App\Models\Empresa;
 use App\Models\Movimento;
 use App\Models\PlanoDeContas;
@@ -57,10 +58,23 @@ class MovimentoController extends Controller
             'planodecontas_id' => $request->planodecontas,
         ]);
 
+        // Se a forma de pagamento for 'cartao', adiciona à conta a pagar
+        if ($request['forma_pagamento'] === 'cartao' && isset($request['vencimento'])) {
+            ContasAPagar::create([
+                'descricao' => $request->descricao,
+                'data_vencimento' => $request->vencimento,
+                'valor' => $request->valor,
+                'status' => 'pendente',
+                'empresa_id' => $request->empresa_id,
+            ]);
+        }
+
+
+
         return redirect()->route('movimentos.index')->with('success', 'Movimento criado com sucesso!');
     }catch(\Exception $e)
     {
-        // dd($e->getMessage());
+        dd($e->getMessage());
     }
     }
 
