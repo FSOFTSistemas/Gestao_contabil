@@ -320,7 +320,25 @@ return [
         'url' => 'cmv',
         'icon' => 'fas fa-chart-line',
         'can' => 'acesso total',
-    ],   
+    ], 
+    [
+        'text' => 'Relatórios',
+        'url' => 'relatorios',
+        'icon' => 'fas fa-file-alt',
+        'can' => 'acesso total',
+    ],  
+    [
+        'text' => 'Patrimônio',
+        'url' => 'patrimonios',
+        'icon' => 'fas fa-warehouse',
+        'can' => 'acesso total',
+    ],
+    [
+        'text' => 'Contas a Pagar',
+        'url' => 'contas-a-pagar',
+        'icon' => 'fas fa-money-bill-wave',
+        'can' => 'acesso total',
+    ],
     [
         'text' => 'Clientes',
         'url' => 'clientes',
