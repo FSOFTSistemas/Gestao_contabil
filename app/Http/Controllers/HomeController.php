@@ -32,7 +32,7 @@ class HomeController extends Controller
         $empresas = Empresa::all();
         $empresaId = Auth::user()->empresa_id;
 
-        if ($empresaId > 1){
+        if ($empresaId >= 1){
             session()->put('empresa_id', $empresaId);
             $clientes = Cliente::where('empresa_id', $empresaId)->count();
             $fornecedores = Fornecedor::where('empresa_id', $empresaId)->count();
