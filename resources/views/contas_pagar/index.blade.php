@@ -11,7 +11,7 @@
     <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Nova Conta</button>
 
     {{-- DataTable --}}
-    @component('components.data-table', ['itemsPerPage' => 10, 'responsive' => []])
+    @component('components.data-table', ['itemsPerPage' => 10, 'showTotal' => true,'valueColumnIndex' => 2, 'responsive' => []])
         <thead>
             <tr>
                 <th>#</th>

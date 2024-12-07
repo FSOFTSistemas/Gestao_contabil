@@ -7,10 +7,10 @@
 @stop
 
 @section('content')
-    <!-- Botão para abrir modal de criação -->
+
     <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreate">Novo Patrimônio</button>
 
-    @component('components.data-table', ['itemsPerPage' => 10, 'responsive' => [[
+    @component('components.data-table', ['itemsPerPage' => 10, 'showTotal' => true,'valueColumnIndex' => 4, 'responsive' => [[
         'targets' => -1,
         'orderable' => false,
         'searchable' => false,
