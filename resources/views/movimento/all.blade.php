@@ -278,6 +278,7 @@
                             <option value="transferencia" {{ $movimento->forma_pagamento == 'transferencia' ? 'selected' : '' }}>Transferência</option>
                         </select>
                     </div>
+                    
 
                     <div class="form-group">
                         <label for="valor">Valor</label>
@@ -324,6 +325,18 @@
             "lengthChange": false,
             "autoWidth": false,
         });
+    });
+</script>
+<script>
+    // Script para exibir o campo de vencimento se a forma de pagamento for 'cartao'
+    document.getElementById('forma_pagamento').addEventListener('change', function () {
+        var formaPagamento = this.value;
+        var vencimentoDiv = document.getElementById('vencimento_div');
+        if (formaPagamento === 'cartao') {
+            vencimentoDiv.style.display = 'block'; // Exibe o campo de vencimento
+        } else {
+            vencimentoDiv.style.display = 'none'; // Oculta o campo de vencimento
+        }
     });
 </script>
 @stop

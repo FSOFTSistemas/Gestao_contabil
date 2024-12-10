@@ -111,12 +111,12 @@ class MovimentoController extends Controller
     
             $request->validate([
                 'descricao' => 'required|string|max:255',
-                'tipo' => 'required|in:despesa,receita',
+                'tipo' => 'required|in:despesa,receita,cmv',
                 'data' => 'required|date',
                 'forma_pagamento' => 'required|string|max:255',
                 'valor' => 'required|numeric|min:0',
                 'empresa_id' => 'required|exists:empresas,id',
-                'planodecontas_id' => 'required',
+                'planodecontas' => 'required',
             ]);
     
             $movimento->update([
