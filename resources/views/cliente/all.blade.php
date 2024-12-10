@@ -3,7 +3,12 @@
 @section('title', 'Clientes')
 
 @section('content_header')
-
+@if (Session::has('sweetalert.alert'))
+    <script>
+        let config = {!! Session::pull('sweetalert.alert') !!}
+        Swal.fire(config)
+    </script>
+@endif
 @stop
 
 @section('content')

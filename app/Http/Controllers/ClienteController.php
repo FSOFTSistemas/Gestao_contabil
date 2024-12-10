@@ -6,6 +6,7 @@ use App\Models\cliente;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Wavey\Sweetalert\Sweetalert;
 
 class ClienteController extends Controller
 {
@@ -14,9 +15,16 @@ class ClienteController extends Controller
      */
     public function index()
     {
+        try
+        {
+            $clientes = cliente::where('empresa_id', session('empresa_id'))->get();
+            return view('cliente.all', ['clientes' => $clientes]);
 
-        $clientes = cliente::where('empresa_id', session('empresa_id'))->get();
-        return view('cliente.all', ['clientes' => $clientes]);
+        }catch(\Exception $e)
+        {
+            Sweetalert::error('Erro ao abrir clientes !', 'Error');
+            return redirect()->back($e->getMessage());
+        }
     }
 
     /**
@@ -33,6 +41,8 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        try
+        {
         $request->validate([
             'nome' => 'required|string|max:255',
             'email' => 'required|email|unique:clientes,email',
@@ -55,7 +65,15 @@ class ClienteController extends Controller
             'empresa_id' => $request->empresa_id,
         ]);
 
+        Sweetalert::success('Cliente cadastrado com sucesso!', 'Sucesso');
+
         return redirect()->route('clientes.index')->with('success', 'Cliente cadastrado com sucesso!');
+
+    }catch(\Exception $e)
+    {
+        Sweetalert::error('Erro ao cadastrar cliente !', 'Error');
+        return redirect()->back()->withInput()->with('error', 'Algo deu errado!'.$e->getMessage());
+    }
     }
 
     /**
@@ -71,8 +89,14 @@ class ClienteController extends Controller
      */
     public function edit(cliente $cliente)
     {
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('cliente.form', compact('cliente', 'empresas'));
+        try {
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            return view('cliente.form', compact('cliente', 'empresas'));
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao abrir editar! '.$e->getMessage(), 'Error');
+            redirect()->back()->with('error','Erro ao editar');
+        }
     }
 
     /**
@@ -80,29 +104,38 @@ class ClienteController extends Controller
      */
     public function update(Request $request, cliente $cliente)
     {
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'email' => 'required|email|unique:clientes,email,' . $cliente->id,
-            'telefone' => 'nullable|string|max:20',
-            'endereco' => 'nullable|string|max:255',
-            'cidade' => 'nullable|string|max:100',
-            'estado' => 'nullable|string|max:50',
-            'cep' => 'nullable|string|max:10',
-            'empresa_id' => 'required'
-        ]);
+        try {
 
-        $cliente->update([
-            'nome' => $request->nome,
-            'email' => $request->email,
-            'telefone' => $request->telefone,
-            'endereco' => $request->endereco,
-            'cidade' => $request->cidade,
-            'estado' => $request->estado,
-            'cep' => $request->cep,
-            'empresa_id' => $request->empresa_id,
-        ]);
+            $request->validate([
+                'nome' => 'required|string|max:255',
+                'email' => 'required|email|unique:clientes,email,' . $cliente->id,
+                'telefone' => 'nullable|string|max:20',
+                'endereco' => 'nullable|string|max:255',
+                'cidade' => 'nullable|string|max:100',
+                'estado' => 'nullable|string|max:50',
+                'cep' => 'nullable|string|max:10',
+                'empresa_id' => 'required'
+            ]);
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
+            $cliente->update([
+                'nome' => $request->nome,
+                'email' => $request->email,
+                'telefone' => $request->telefone,
+                'endereco' => $request->endereco,
+                'cidade' => $request->cidade,
+                'estado' => $request->estado,
+                'cep' => $request->cep,
+                'empresa_id' => $request->empresa_id,
+            ]);
+
+        Sweetalert::success('Cliente atualizado com sucesso!', 'Sucesso');
+
+        return redirect()->route('clientes.index');
+
+    } catch (\Exception $e) {
+        Sweetalert::error('Erro ao atualizar cliente !', 'Error');
+        return redirect()->back()->withInput()->with('error', 'Algo deu errado!'.$e->getMessage());
+    }
     }
 
     /**
@@ -114,26 +147,34 @@ class ClienteController extends Controller
 
             $cliente->delete();
 
+            Sweetalert::success('Cliente deletado com sucesso !', 'Sucesso');
             return redirect()->route('clientes.index')->with('success', 'Cliente deletado com suscesso !');
+
         } catch (\Exception $e) {
+            Sweetalert::error('Erro ao deletar cliente !', 'Error');
             return redirect()->back()->with('error', 'Erro ao deletar cliente: ' . $e->getMessage());
         }
     }
 
     public function buscarEnderecoPorCep($cep)
     {
-        $cep = preg_replace('/[^0-9]/', '', $cep);
-
-        if (strlen($cep) !== 8) {
-            return response()->json(['error' => 'CEP inválido.'], 400);
+        try {
+            $cep = preg_replace('/[^0-9]/', '', $cep);
+    
+            if (strlen($cep) !== 8) {
+                return response()->json(['error' => 'CEP inválido.'], 400);
+            }
+    
+            $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
+    
+            if ($response->failed()) {
+                return response()->json(['error' => 'Não foi possível buscar o endereço.'], 500);
+            }
+            return $response->json();
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao buscar endereco !', 'Error');
+            redirect()->back()->withInput();
         }
 
-        $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
-
-        if ($response->failed()) {
-            return response()->json(['error' => 'Não foi possível buscar o endereço.'], 500);
-        }
-
-        return $response->json();
     }
 }
