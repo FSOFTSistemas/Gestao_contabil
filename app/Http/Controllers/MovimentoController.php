@@ -8,6 +8,7 @@ use App\Models\Movimento;
 use App\Models\PlanoDeContas;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Wavey\Sweetalert\Sweetalert;
 
 class MovimentoController extends Controller
 {
@@ -16,11 +17,17 @@ class MovimentoController extends Controller
      */
     public function index()
     {
-        $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
-        $produtosServicos = Produto::where('empresa_id', session('empresa_id'))->get();
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        $planodecontas = PlanoDeContas::orderBy('descricao', 'asc')->get();
-        return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas, 'planodecontas' => $planodecontas]);
+        try {
+            $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
+            $produtosServicos = Produto::where('empresa_id', session('empresa_id'))->get();
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            $planodecontas = PlanoDeContas::orderBy('descricao', 'asc')->get();
+            return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas, 'planodecontas' => $planodecontas]);
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -69,12 +76,12 @@ class MovimentoController extends Controller
             ]);
         }
 
-
+        Sweetalert::success('Movimento criado com sucesso!', 'Sucesso');
 
         return redirect()->route('movimentos.index')->with('success', 'Movimento criado com sucesso!');
-    }catch(\Exception $e)
-    {
-        dd($e->getMessage());
+    } catch (\Exception $e) {
+        Sweetalert::error('Erro ao inserir movimento !'.$e->getMessage(), 'Error');
+        return redirect()->back()->withInput();
     }
     }
 
@@ -99,32 +106,36 @@ class MovimentoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Encontrar o movimento
-        $movimento = Movimento::findOrFail($id);
-
-        // Validação dos dados
-        $request->validate([
-            'descricao' => 'required|string|max:255',
-            'tipo' => 'required|in:despesa,receita',
-            'data' => 'required|date',
-            'forma_pagamento' => 'required|string|max:255',
-            'valor' => 'required|numeric|min:0',
-            'empresa_id' => 'required|exists:empresas,id',
-            'planodecontas_id' => 'required',
-        ]);
-
-        // Atualizar o movimento
-        $movimento->update([
-            'descricao' => $request->descricao,
-            'tipo' => $request->tipo,
-            'data' => $request->data,
-            'forma_pagamento' => $request->forma_pagamento,
-            'valor' => $request->valor,
-            'empresa_id' => $request->empresa_id,
-            'planodecontas_id' => $request->planodecontas
-        ]);
-
-        return redirect()->route('movimentos.index')->with('success', 'Movimento atualizado com sucesso!');
+        try {
+            $movimento = Movimento::findOrFail($id);
+    
+            $request->validate([
+                'descricao' => 'required|string|max:255',
+                'tipo' => 'required|in:despesa,receita',
+                'data' => 'required|date',
+                'forma_pagamento' => 'required|string|max:255',
+                'valor' => 'required|numeric|min:0',
+                'empresa_id' => 'required|exists:empresas,id',
+                'planodecontas_id' => 'required',
+            ]);
+    
+            $movimento->update([
+                'descricao' => $request->descricao,
+                'tipo' => $request->tipo,
+                'data' => $request->data,
+                'forma_pagamento' => $request->forma_pagamento,
+                'valor' => $request->valor,
+                'empresa_id' => $request->empresa_id,
+                'planodecontas_id' => $request->planodecontas
+            ]);
+    
+            Sweetalert::success('Movimento atualizado com sucesso!', 'Sucesso');
+            return redirect()->route('movimentos.index')->with('success', 'Movimento atualizado com sucesso!');
+          
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao atualizar movimento !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -132,12 +143,15 @@ class MovimentoController extends Controller
      */
     public function destroy($id)
     {
-         // Encontrar o movimento
-         $movimento = Movimento::findOrFail($id);
-
-         // Excluir o movimento
-         $movimento->delete();
-
-         return redirect()->route('movimentos.index')->with('success', 'Movimento excluído com sucesso!');
+        try {
+            $movimento = Movimento::findOrFail($id);
+            $movimento->delete();
+            Sweetalert::success('Movimento excluido com sucesso!', 'Sucesso');
+            return redirect()->route('movimentos.index')->with('success', 'Movimento excluído com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao deletar movimento !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 }

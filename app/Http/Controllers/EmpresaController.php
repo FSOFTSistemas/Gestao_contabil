@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Wavey\Sweetalert\Sweetalert;
 
 class EmpresaController extends Controller
 {
@@ -29,17 +30,23 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'razao_social' => 'required|string|max:255',
-            'fantasia' => 'required|string|max:255',
-            'cnpj' => 'required|string|max:18',
-            'email' => 'required|email',
-
-        ]);
-
-        Empresa::create($request->all());
-
-        return redirect()->route('empresas.index')->with('success', 'Empresa cadastrada com sucesso!');
+        try {
+            $request->validate([
+                'razao_social' => 'required|string|max:255',
+                'fantasia' => 'required|string|max:255',
+                'cnpj' => 'required|string|max:18',
+                'email' => 'required|email',
+    
+            ]);
+    
+            Empresa::create($request->all());
+            Sweetalert::success('Empresa criada com sucesso!', 'Sucesso');
+            return redirect()->route('empresas.index')->with('success', 'Empresa cadastrada com sucesso!');
+           
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao inserir empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -70,25 +77,31 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, Empresa $empresa)
     {
-        $validatedData = $request->validate([
-            'razao_social' => 'required|string|max:255',
-            'fantasia' => 'required|string|max:255',
-            'cnpj' => 'required|string|max:20|unique:empresas,cnpj,' . $empresa->id,
-            'IE' => 'nullable|string|max:50',
-            'email' => 'required|email|max:255',
-            'telefone' => 'nullable|string|max:20',
-            'endereco' => 'nullable|string|max:255',
-            'cidade' => 'nullable|string|max:100',
-            'estado' => 'nullable|string|max:50',
-            'cep' => 'nullable|string|max:15',
-        ]);
-
-        $empresa = Empresa::findOrFail($empresa->id);
-
-        $empresa->update($validatedData);
-
-        return redirect()->route('empresas.index')
-            ->with('success', 'Empresa atualizada com sucesso!');
+        try {
+            $validatedData = $request->validate([
+                'razao_social' => 'required|string|max:255',
+                'fantasia' => 'required|string|max:255',
+                'cnpj' => 'required|string|max:20|unique:empresas,cnpj,' . $empresa->id,
+                'IE' => 'nullable|string|max:50',
+                'email' => 'required|email|max:255',
+                'telefone' => 'nullable|string|max:20',
+                'endereco' => 'nullable|string|max:255',
+                'cidade' => 'nullable|string|max:100',
+                'estado' => 'nullable|string|max:50',
+                'cep' => 'nullable|string|max:15',
+            ]);
+    
+            $empresa = Empresa::findOrFail($empresa->id);
+    
+            $empresa->update($validatedData);
+            Sweetalert::success('Empresa atualizada com sucesso!', 'Sucesso');
+            return redirect()->route('empresas.index')
+                ->with('success', 'Empresa atualizada com sucesso!');
+            
+            } catch (\Exception $e) {
+                Sweetalert::error('Erro ao atualizar empresa !'.$e->getMessage(), 'Error');
+                return redirect()->back()->withInput();
+            }
     }
 
 
@@ -97,10 +110,12 @@ class EmpresaController extends Controller
         try {
 
             $empresa->delete();
-
+            Sweetalert::success('Empresa excluida com sucesso!', 'Sucesso');
             return redirect()->route('empresas.index')->with('success', 'Empresa deletada com suscesso !');
+            
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao deletar empresa: ' . $e->getMessage());
+            Sweetalert::error('Erro ao deletar empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
         }
     }
 }

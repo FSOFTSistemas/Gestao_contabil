@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PlanoDeContas;
 use Illuminate\Http\Request;
+use Wavey\Sweetalert\Sweetalert;
 
 class PlanoDeContasController extends Controller
 {
@@ -29,15 +30,21 @@ class PlanoDeContasController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'codigo' => 'required',
-            'descricao' => 'required|string|max:255',
-            'tipo' => 'required|in:despesa,receita',
-        ]);
-
-        PlanoDeContas::create($validatedData);
-
-        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas criado com sucesso!');
+        try {
+            $validatedData = $request->validate([
+                'codigo' => 'required',
+                'descricao' => 'required|string|max:255',
+                'tipo' => 'required|in:despesa,receita',
+            ]);
+    
+            PlanoDeContas::create($validatedData);
+            Sweetalert::success('Plano de contas criada com sucesso!', 'Sucesso');
+            return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas criado com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao inserir plano de contas !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -61,15 +68,21 @@ class PlanoDeContasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'descricao' => 'required|string|max:255',
-            'tipo' => 'required|in:despesa,receita',
-        ]);
-
-        $planoDeContas = PlanoDeContas::findOrFail($id);
-        $planoDeContas->update($validatedData);
-
-        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas atualizado com sucesso!');
+        try {
+            $validatedData = $request->validate([
+                'descricao' => 'required|string|max:255',
+                'tipo' => 'required|in:despesa,receita',
+            ]);
+    
+            $planoDeContas = PlanoDeContas::findOrFail($id);
+            $planoDeContas->update($validatedData);
+            Sweetalert::success('Plano de contas atualizado com sucesso!', 'Sucesso');
+            return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas atualizado com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao atualizar plano de contas !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -77,9 +90,15 @@ class PlanoDeContasController extends Controller
      */
     public function destroy($id)
     {
-        $planoDeContas = PlanoDeContas::findOrFail($id);
-        $planoDeContas->delete();
-
-        return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas deletado com sucesso!');
+        try {
+            $planoDeContas = PlanoDeContas::findOrFail($id);
+            $planoDeContas->delete();
+            Sweetalert::success('Plano de contas deletado com sucesso!', 'Sucesso');
+            return redirect()->route('planos-de-contas.index')->with('success', 'Plano de contas deletado com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao deletar plano de contas !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 }
