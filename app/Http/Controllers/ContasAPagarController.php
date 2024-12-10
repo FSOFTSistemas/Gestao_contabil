@@ -64,9 +64,10 @@ class ContasAPagarController extends Controller
         }
     }
 
-    public function destroy(ContasAPagar $contaPagar)
+    public function destroy($id)
     {
         try {
+            $contaPagar = ContasAPagar::find($id);
             $contaPagar->delete();
             Sweetalert::success('Conta a pagar removida com sucesso!', 'Sucesso');
             return redirect()->back()->with('success', 'Conta a pagar removida com sucesso!');
