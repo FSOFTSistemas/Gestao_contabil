@@ -5,20 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Patrimonio;
 use Illuminate\Http\Request;
+use Wavey\Sweetalert\Sweetalert;
 
 class PatrimonioController extends Controller
 {
     public function index()
     {
-        $patrimonios = Patrimonio::where('empresa_id', session('empresa_id'))->get();
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('patrimonio.index', compact('patrimonios', 'empresas'));
+        try {
+            $patrimonios = Patrimonio::where('empresa_id', session('empresa_id'))->get();
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            return view('patrimonio.index', compact('patrimonios', 'empresas'));
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou empresa !'.$e->getMessage(), 'Error');
+        }
     }
 
     public function create()
     {
-        $empresas = Empresa::where('empresa_id', session('empresa_id'))->get();
-        return view('patrimonio.create', compact('empresas'));
+        try {
+            $empresas = Empresa::where('empresa_id', session('empresa_id'))->get();
+            return view('patrimonio.create', compact('empresas'));
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou empresa !'.$e->getMessage(), 'Error');
+        }
+        
     }
 
     public function store(Request $request)
@@ -34,39 +45,59 @@ class PatrimonioController extends Controller
             ]);
             
             Patrimonio::create($request->all());
-            
+            Sweetalert::success('Patrimônio criado com sucesso.', 'Sucesso');
             return redirect()->route('patrimonios.index')->with('success', 'Patrimônio criado com sucesso.');
         }catch(\Exception $e)
         {
-            dd($e->getMessage());
+            Sweetalert::error('Erro ao salvar patrimonio !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
         }
     }
 
     public function edit(Patrimonio $patrimonio)
     {
-        $empresas = Empresa::where('empresa_id', session('empresa_id'))->get();
-        return view('patrimonio.edit', compact('patrimonio', 'empresas'));
+        try {
+            $empresas = Empresa::where('empresa_id', session('empresa_id'))->get();
+            return view('patrimonio.edit', compact('patrimonio', 'empresas'));
+    
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+        }
     }
 
     public function update(Request $request, Patrimonio $patrimonio)
     {
-        $request->validate([
-            'nome' => 'required|string|max:255',
-            'valor' => 'required|numeric|min:0',
-            'data_aquisicao' => 'required|date',
-            'empresa_id' => 'required|exists:empresas,id',
-        ]);
+        try {
+            $request->validate([
+                'nome' => 'required|string|max:255',
+                'valor' => 'required|numeric|min:0',
+                'data_aquisicao' => 'required|date',
+                'empresa_id' => 'required|exists:empresas,id',
+            ]);
+    
+            $patrimonio->update($request->all());
+            
+            Sweetalert::success('Patrimônio atualizado com sucesso.', 'Sucesso');
+            return redirect()->route('patrimonios.index')->with('success', 'Patrimônio atualizado com sucesso.');
 
-        $patrimonio->update($request->all());
-
-        return redirect()->route('patrimonios.index')->with('success', 'Patrimônio atualizado com sucesso.');
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao editar patrimonio !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     public function destroy(Patrimonio $patrimonio)
     {
-        $patrimonio->delete();
+        try {
+            $patrimonio->delete();
+            Sweetalert::success('Patrimônio deletado com sucesso.', 'Sucesso');
+            return redirect()->route('patrimonios.index')->with('success', 'Patrimônio excluído com sucesso.');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao editar patrimonio !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
 
-        return redirect()->route('patrimonios.index')->with('success', 'Patrimônio excluído com sucesso.');
     }
 
 }

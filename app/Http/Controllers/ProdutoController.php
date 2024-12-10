@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Wavey\Sweetalert\Sweetalert;
 
 class ProdutoController extends Controller
 {
@@ -13,8 +14,14 @@ class ProdutoController extends Controller
      */
     public function index()
     {
-        $produtos = Produto::where('empresa_id', session('empresa_id'))->get();
-        return view('produto.all', ['produtos' => $produtos]);
+        try {
+            $produtos = Produto::where('empresa_id', session('empresa_id'))->get();
+            return view('produto.all', ['produtos' => $produtos]);
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -22,8 +29,14 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('produto.form', ['empresas' => $empresas]);
+        try {
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            return view('produto.form', ['empresas' => $empresas]);
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -31,17 +44,23 @@ class ProdutoController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'descricao' => 'required|string|max:255',
-            'precocusto' => 'required|numeric',
-            'precovenda' => 'required|numeric',
-            'estoque' => 'required|integer',
-            'empresa_id' => 'required|exists:empresas,id',
-        ]);
-
-        Produto::create($validatedData);
-
-        return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
+        try {
+            $validatedData = $request->validate([
+                'descricao' => 'required|string|max:255',
+                'precocusto' => 'required|numeric',
+                'precovenda' => 'required|numeric',
+                'estoque' => 'required|integer',
+                'empresa_id' => 'required|exists:empresas,id',
+            ]);
+    
+            Produto::create($validatedData);
+            Sweetalert::success('Produto criado com sucesso!', 'Sucesso');
+            return redirect()->route('produtos.index')->with('success', 'Produto criado com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao inserir produto !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -57,8 +76,14 @@ class ProdutoController extends Controller
      */
     public function edit(Produto $produto)
     {
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('produto.form', compact('produto', 'empresas'));
+        try {
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            return view('produto.form', compact('produto', 'empresas'));
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -66,17 +91,23 @@ class ProdutoController extends Controller
      */
     public function update(Request $request, Produto $produto)
     {
-        $validatedData = $request->validate([
-            'descricao' => 'required|string|max:255',
-            'precocusto' => 'required|numeric',
-            'precovenda' => 'required|numeric',
-            'estoque' => 'required|integer',
-            'empresa_id' => 'required|exists:empresas,id',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'descricao' => 'required|string|max:255',
+                'precocusto' => 'required|numeric',
+                'precovenda' => 'required|numeric',
+                'estoque' => 'required|integer',
+                'empresa_id' => 'required|exists:empresas,id',
+            ]);
+    
+            $produto->update($validatedData);
+            Sweetalert::success('Produto atualizado com sucesso!', 'Sucesso');
+            return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
 
-        $produto->update($validatedData);
-
-        return redirect()->route('produtos.index')->with('success', 'Produto atualizado com sucesso!');
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao atualizar produto !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -84,8 +115,14 @@ class ProdutoController extends Controller
      */
     public function destroy(Produto $produto)
     {
-        $produto->delete();
+        try {
+            $produto->delete();
+            Sweetalert::success('Produto excluido com sucesso!', 'Sucesso');
+            return redirect()->route('produtos.index')->with('success', 'Produto excluído com sucesso!');
 
-        return redirect()->route('produtos.index')->with('success', 'Produto excluído com sucesso!');
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao atualizar produto !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 }

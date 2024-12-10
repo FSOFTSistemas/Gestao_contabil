@@ -8,6 +8,7 @@ use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Wavey\Sweetalert\Sweetalert;
 
 class UsuarioController extends Controller
 {
@@ -16,9 +17,15 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuarios = User::all();
-        $empresas = Empresa::where('id', session('empresa_id'))->get();
-        return view('user.index', compact('usuarios','empresas'));
+        try {
+            $usuarios = User::all();
+            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            return view('user.index', compact('usuarios','empresas'));
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Verifique se selecionou a empresa !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 
     /**
@@ -53,12 +60,12 @@ class UsuarioController extends Controller
                 'role' => $request->role,
                 'empresa_id' => $request->empresa_id,
             ]);
-
+            Sweetalert::success('Usuário criado com sucesso!', 'Sucesso');
             return redirect()->route('usuarios.index')->with('success', 'Usuário criado com sucesso!');
-        }catch(\Exception $e)
-        {
-            // dd($e->getMessage());
-            return redirect()->back()->with('error', 'Erro ao salvar usuario: '.$e->getMessage());
+
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao inserir usuário !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -83,23 +90,29 @@ class UsuarioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'role' => 'required|string|in:admin,user',
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'password' => $request->password ? Hash::make($request->password) : $user->password,
-        ]);
-
-        return redirect()->route('usuarios.index')->with('success', 'Usuário atualizado com sucesso!');
+        try {
+            $user = User::findOrFail($id);
+    
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email,' . $user->id,
+                'role' => 'required|string|in:admin,user',
+                'password' => 'nullable|string|min:6',
+            ]);
+    
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'role' => $request->role,
+                'password' => $request->password ? Hash::make($request->password) : $user->password,
+            ]);
+            Sweetalert::success('Usuário atualizado com sucesso!', 'Sucesso');
+            return redirect()->route('usuarios.index')->with('success', 'Usuário atualizado com sucesso!');
+            
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao atualizar usuário !'.$e->getMessage(), 'Error');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -107,9 +120,15 @@ class UsuarioController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return redirect()->route('usuarios.index')->with('success', 'Usuário excluído com sucesso!');
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            Sweetalert::success('Usuário excluido com sucesso!', 'Sucesso');
+            return redirect()->route('usuarios.index')->with('success', 'Usuário excluído com sucesso!');
+           
+        } catch (\Exception $e) {
+            Sweetalert::error('Erro ao deletar usuário !'.$e->getMessage(), 'Error');
+            return redirect()->back();
+        }
     }
 }

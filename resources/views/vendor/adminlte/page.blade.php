@@ -4,15 +4,18 @@
 @inject('preloaderHelper', 'JeroenNoten\LaravelAdminLte\Helpers\PreloaderHelper')
 
 @section('adminlte_css')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('css')
     @yield('css')
 @stop
+
 
 @section('classes_body', $layoutHelper->makeBodyClasses())
 
 @section('body_data', $layoutHelper->makeBodyData())
 
 @section('body')
+@include('sweetalert::sweetalert')
     <div class="wrapper">
 
         {{-- Preloader Animation (fullscreen mode) --}}
@@ -55,4 +58,5 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
+    
 @stop
