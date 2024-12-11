@@ -51,27 +51,28 @@ class RelatorioController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $reportType = $request->input('report_type');
+        $empresaId = session('empresa_id');
 
         // Verificar o tipo de relatório e carregar a lógica correspondente
         switch ($reportType) {
             case 'dre':
                 $view = 'relatorio.dre';
-                $dados = $this->gerarRelatorioDre($startDate, $endDate);
+                $dados = $this->gerarRelatorioDre($startDate, $endDate, $empresaId);
                 break;
 
             case 'geral':
                 $view = 'relatorio.geral';
-                $dados = $this->gerarRelatorioGeral($startDate, $endDate);
+                $dados = $this->gerarRelatorioGeral($startDate, $endDate, $empresaId);
                 break;
 
             case 'cmv':
                 $view = 'relatorio.cmv';
-                $dados = $this->gerarRelatorioCmv($startDate, $endDate);
+                $dados = $this->gerarRelatorioCmv($startDate, $endDate, $empresaId);
                 break;
 
             case 'despesas':
                 $view = 'relatorio.despesas';
-                $dados = $this->gerarRelatorioDespesas($startDate, $endDate);
+                $dados = $this->gerarRelatorioDespesas($startDate, $endDate, $empresaId);
                 break;
 
             default:
@@ -86,10 +87,11 @@ class RelatorioController extends Controller
     }
 
 
-    protected function gerarRelatorioDre($startDate, $endDate)
+    protected function gerarRelatorioDre($startDate, $endDate, $empresaId)
     {
         // Exemplo de lógica específica para o DRE
         return Movimento::whereBetween('data', [$startDate, $endDate])
+            ->where('empresa_id', $empresaId)
             ->get()
             ->groupBy('tipo')
             ->map(function ($group) {
@@ -101,15 +103,16 @@ class RelatorioController extends Controller
     }
 
 
-    protected function gerarRelatorioGeral($startDate, $endDate)
+    protected function gerarRelatorioGeral($startDate, $endDate, $empresaId)
     {
-        return Movimento::whereBetween('data', [$startDate, $endDate])->get();
+        return Movimento::whereBetween('data', [$startDate, $endDate])->where('empresa_id', $empresaId)->get();
     }
 
-    protected function gerarRelatorioCmv($startDate, $endDate)
+    protected function gerarRelatorioCmv($startDate, $endDate, $empresaId)
     {
         return Movimento::whereBetween('data', [$startDate, $endDate])
             ->where('tipo', 'cmv')
+            ->where('empresa_id', $empresaId)
             ->get()
             ->map(function ($movimento) {
                 return [
@@ -120,10 +123,11 @@ class RelatorioController extends Controller
             });
     }
 
-    protected function gerarRelatorioDespesas($startDate, $endDate)
+    protected function gerarRelatorioDespesas($startDate, $endDate, $empresaId)
     {
         return Movimento::whereBetween('data', [$startDate, $endDate])
             ->where('tipo', 'despesa')
+            ->where('empresa_id', $empresaId)
             ->get();
     }
 }
