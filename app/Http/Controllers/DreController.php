@@ -64,7 +64,7 @@ class DreController extends Controller
             ->whereBetween('movimentos.data', [$startDate, $endDate])
             ->sum('movimentos.valor');
 
-        $lucroAntesImpostos = $totalReceita - $totalDespesa - $totalDespesasOperacionais - $DespesasCompras;
+        $lucroAntesImpostos = $totalReceita - $totalDespesa;// - $totalDespesasOperacionais - $DespesasCompras;
         $impostosSobreLucro = $lucroAntesImpostos * 0;//0.15;
         $lucroLiquido = $lucroAntesImpostos - $impostosSobreLucro;
 
