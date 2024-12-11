@@ -32,11 +32,11 @@
                 </tr>
                 <tr>
                     <td>Receita Cartão</td>
-                    <td>{{ number_format($dre['receita_bruta'], 2, ',', '.') }}</td>
+                    <td>{{ number_format($dre['receita_cartao'], 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td>Receita Avista</td>
-                    <td>{{ number_format($dre['receita_bruta'], 2, ',', '.') }}</td>
+                    <td>Receita à Vista</td>
+                    <td>{{ number_format($dre['receita_dinheiro'], 2, ',', '.') }}</td>
                 </tr>
                 <tr>
                     <td>(-) Impostos/Descontos</td>
@@ -45,6 +45,14 @@
                 <tr class="table-primary">
                     <td>Receita Líquida</td>
                     <td>{{ number_format($dre['receita_liquida'], 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>(-) Despesas Operacionais</td>
+                    <td>{{ number_format($dre['despesas_operacionais'], 2, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>(-) Despesas Financeiras</td>
+                    <td>{{ number_format($dre['despesas_financeiras'], 2, ',', '.') }}</td>
                 </tr>
                 <tr class="table-primary">
                     <td>Despesas</td>
@@ -55,18 +63,6 @@
                     <td>{{ number_format($dre['lucro_bruto'], 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td>(-) Despesas Operacionais</td>
-                    <td>{{ number_format($dre['despesas_operacionais'], 2, ',', '.') }}</td>
-                </tr>
-                <tr class="table-primary">
-                    <td>Lucro Operacional</td>
-                    <td>{{ number_format($dre['lucro_operacional'], 2, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>(-) Despesas Financeiras</td>
-                    <td>{{ number_format($dre['despesas_financeiras'], 2, ',', '.') }}</td>
-                </tr>
-                <tr class="table-primary">
                     <td>Lucro Antes dos Impostos</td>
                     <td>{{ number_format($dre['lucro_antes_impostos'], 2, ',', '.') }}</td>
                 </tr>
