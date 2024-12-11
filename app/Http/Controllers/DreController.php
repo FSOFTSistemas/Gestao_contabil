@@ -93,7 +93,8 @@ class DreController extends Controller
 
 
 
-        $resultados = Movimento::where('tipo','cmv')->get();
+        $resultados = Movimento::where('tipo','cmv')->where('empresa_id', $empresaId)->get();
         return view('DRE.cmv', compact('resultados'));
     }
 }
+
