@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório CMV</title>
+    <title>Relatório de Despesas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +13,8 @@
             color: #333;
         }
 
-        .header, .footer {
+        .header,
+        .footer {
             text-align: center;
             padding: 10px;
             background-color: #f8f9fa;
@@ -41,7 +43,8 @@
             margin-top: 20px;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
@@ -69,16 +72,17 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Cabeçalho -->
     <div class="header">
-        <h1>Relatório CMV - Custo de Mercadoria Vendida</h1>
+        <h1>Relatório de Despesas</h1>
         <p style="text-align: right; font-size: 8px;">Período: {{ $startDate }} a {{ $endDate }}</p>
     </div>
 
     <!-- Conteúdo -->
-    
+    <div class="container">
         <table class="table">
             <thead>
                 <tr>
@@ -89,23 +93,24 @@
             </thead>
             <tbody>
                 @php
-                    $total = 0; 
+                    $totalDespesas = 0; // Inicializa o total
                 @endphp
-                @foreach($dados as $movimento)
+
+                @foreach ($dados as $despesa)
                     <tr>
-                        <td>{{ $movimento['descricao'] }}</td>
-                        <td>{{ \Carbon\Carbon::parse($movimento['data'])->format('d/m/Y') }}</td>
-                        <td>R$ {{ number_format($movimento['valor'], 2, ',', '.') }}</td>
+                        <td>{{ $despesa->descricao }}</td>
+                        <td>{{ \Carbon\Carbon::parse($despesa->data)->format('d/m/Y') }}</td>
+                        <td>R$ {{ number_format($despesa->valor, 2, ',', '.') }}</td>
                     </tr>
                     @php
-                        $total += $movimento['valor']; 
+                        $totalDespesas += $despesa->valor; // Soma o valor da despesa ao total
                     @endphp
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2" style="text-align: right; font-weight: bold;">Total:</td>
-                    <td style="font-weight: bold;">R$ {{ number_format($total, 2, ',', '.') }}</td>
+                    <td colspan="2" style="text-align: right; font-weight: bold;">Total de Despesas:</td>
+                    <td style="font-weight: bold;">R$ {{ number_format($totalDespesas, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -113,7 +118,7 @@
         <div class="date" style="text-align: right">
             <p>Emitido em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
         </div>
-    
+    </div>
 
     <!-- Rodapé -->
     <div class="footer">
@@ -121,4 +126,5 @@
     </div>
 
 </body>
+
 </html>
