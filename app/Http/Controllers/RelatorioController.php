@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movimento;
+use App\Models\Patrimonio;
 use App\Models\Relatorio;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
@@ -74,9 +75,17 @@ class RelatorioController extends Controller
                 $view = 'relatorio.despesas';
                 $dados = $this->gerarRelatorioDespesas($startDate, $endDate, $empresaId);
                 break;
+            case 'receitas':
+                $view = 'relatorio.receitas';
+                $dados = $this->gerarRelatorioReceitas($startDate, $endDate, $empresaId);
+                break;
+
+            case 'patrimonio':
+                $view = 'relatorio.patrimonio';
+                $dados = $this->gerarRelatorioPatrimonio($empresaId);
+                break;
 
             default:
-                // Tipo de relatório inválido
                 return redirect()->back()->withErrors(['error' => 'Tipo de relatório inválido']);
         }
 
@@ -163,6 +172,18 @@ class RelatorioController extends Controller
             ->where('tipo', 'despesa')
             ->where('empresa_id', $empresaId)
             ->get();
+    }
+    protected function gerarRelatorioReceitas($startDate, $endDate, $empresaId)
+    {
+        return Movimento::whereBetween('data', [$startDate, $endDate])
+            ->where('tipo', 'receita')
+            ->where('empresa_id', $empresaId)
+            ->get();
+    }
+
+    protected function gerarRelatorioPatrimonio($empresaId)
+    {
+        return Patrimonio::where('empresa_id', $empresaId)->get();
     }
 
     private function getMovimentoSum($empresaId, $startDate, $endDate, $tipo, $formaPagamento = null)
