@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movimento;
 use App\Models\Relatorio;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
 
 class RelatorioController extends Controller
@@ -15,66 +16,114 @@ class RelatorioController extends Controller
     {
         $startDate = $request->get('start_date');
         $endDate = $request->get('end_date');
-        $reportType = $request->get('report_type');
+        $empresaId = session('empresa_id');
 
-        // Usando o Model para realizar as consultas com filtros
-        $relatorios = Movimento::query()
-            ->when($startDate && $endDate, function($query) use ($startDate, $endDate) {
-                return $query->dataRange($startDate, $endDate);
+        $movimentos = Movimento::query()
+            ->when($empresaId, function ($query) use ($empresaId) {
+                return $query->where('empresa_id', $empresaId);
             })
-            ->when($reportType, function($query) use ($reportType) {
-                return $query->reportType($reportType);
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('data', [$startDate, $endDate]);
             })
+            ->selectRaw("DATE_FORMAT(data, '%Y-%m') as mes, tipo, SUM(valor) as total")
+            ->groupBy('mes', 'tipo')
+            ->orderBy('mes')
             ->get();
 
-        return view('relatorio.index', compact('relatorios'));
+        // Preparando os dados para o gráfico
+        $meses = $movimentos->pluck('mes')->unique()->sort()->values();
+        $receitas = $movimentos->where('tipo', 'receita')->pluck('total', 'mes');
+        $despesas = $movimentos->where('tipo', 'despesa')->pluck('total', 'mes');
+
+        // Convertendo para formato compatível com o Chart.js
+        $dadosGrafico = [
+            'meses' => $meses->toArray(),
+            'receitas' => $meses->map(fn($mes) => $receitas[$mes] ?? 0)->toArray(),
+            'despesas' => $meses->map(fn($mes) => $despesas[$mes] ?? 0)->toArray(),
+        ];
+
+        return view('relatorio.index', compact('dadosGrafico'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+
+    public function gerarPdf(Request $request)
     {
-        //
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $reportType = $request->input('report_type');
+
+        // Verificar o tipo de relatório e carregar a lógica correspondente
+        switch ($reportType) {
+            case 'dre':
+                $view = 'relatorio.dre';
+                $dados = $this->gerarRelatorioDre($startDate, $endDate);
+                break;
+
+            case 'geral':
+                $view = 'relatorio.geral';
+                $dados = $this->gerarRelatorioGeral($startDate, $endDate);
+                break;
+
+            case 'cmv':
+                $view = 'relatorio.cmv';
+                $dados = $this->gerarRelatorioCmv($startDate, $endDate);
+                break;
+
+            case 'despesas':
+                $view = 'relatorio.despesas';
+                $dados = $this->gerarRelatorioDespesas($startDate, $endDate);
+                break;
+
+            default:
+                // Tipo de relatório inválido
+                return redirect()->back()->withErrors(['error' => 'Tipo de relatório inválido']);
+        }
+
+
+        $pdf = FacadePdf::loadView($view, compact('dados', 'reportType', 'startDate', 'endDate'));
+
+        return $pdf->stream("relatorio_{$reportType}.pdf");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+
+    protected function gerarRelatorioDre($startDate, $endDate)
     {
-        //
+        // Exemplo de lógica específica para o DRE
+        return Movimento::whereBetween('data', [$startDate, $endDate])
+            ->get()
+            ->groupBy('tipo')
+            ->map(function ($group) {
+                return [
+                    'total' => $group->sum('valor'),
+                    'quantidade' => $group->count(),
+                ];
+            });
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Relatorio $relatorio)
+
+    protected function gerarRelatorioGeral($startDate, $endDate)
     {
-        //
+        return Movimento::whereBetween('data', [$startDate, $endDate])->get();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Relatorio $relatorio)
+    protected function gerarRelatorioCmv($startDate, $endDate)
     {
-        //
+        return Movimento::whereBetween('data', [$startDate, $endDate])
+            ->where('tipo', 'cmv')
+            ->get()
+            ->map(function ($movimento) {
+                return [
+                    'descricao' => $movimento->descricao,
+                    'valor' => $movimento->valor,
+                    'data' => $movimento->data,
+                ];
+            });
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Relatorio $relatorio)
+    protected function gerarRelatorioDespesas($startDate, $endDate)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Relatorio $relatorio)
-    {
-        //
+        return Movimento::whereBetween('data', [$startDate, $endDate])
+            ->where('tipo', 'despesa')
+            ->get();
     }
 }

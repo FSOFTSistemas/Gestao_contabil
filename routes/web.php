@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('patrimonios', PatrimonioController::class);
     Route::resource('contas-a-pagar', ContasAPagarController::class);
     Route::get('relatorios', [RelatorioController::class, 'index'])->name('relatorios.index');
+    Route::post('/relatorios/pdf', [RelatorioController::class, 'gerarPdf'])->name('relatorios.pdf');
 
 
 });
