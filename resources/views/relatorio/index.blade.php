@@ -35,6 +35,8 @@
                     <option value="geral">Geral</option>
                     <option value="cmv">CMV</option>
                     <option value="despesas">Despesas</option>
+                    <option value="receitas">Receitas</option>
+                    <option value="patrimonio">Patrimonio</option>
                 </select>
             </div>
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório CMV</title>
+    <title>Relatório de Patrimônio</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,51 +73,48 @@
 
     <!-- Cabeçalho -->
     <div class="header">
-        <h1>Relatório CMV - Custo de Mercadoria Vendida</h1>
-        <p style="text-align: right; font-size: 8px;">Período: {{ $startDate }} a {{ $endDate }}</p>
+        <h1>Relatório de Patrimônio</h1>
+        <p style="text-align: right; font-size: 8px;">Emitido em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
     </div>
 
     <!-- Conteúdo -->
-    
+    <div class="container">
         <table class="table">
             <thead>
                 <tr>
+                    <th>Nome</th>
                     <th>Descrição</th>
-                    <th>Data</th>
-                    <th>Valor</th>
+                    <th>Valor (R$)</th>
                 </tr>
             </thead>
             <tbody>
                 @php
-                    $total = 0; 
+                    $totalValor = 0; // Inicializa o total
                 @endphp
-                @foreach($dados as $movimento)
+
+                @foreach($dados as $patrimonio)
                     <tr>
-                        <td>{{ $movimento['descricao'] }}</td>
-                        <td>{{ \Carbon\Carbon::parse($movimento['data'])->format('d/m/Y') }}</td>
-                        <td>R$ {{ number_format($movimento['valor'], 2, ',', '.') }}</td>
+                        <td>{{ $patrimonio->nome }}</td>
+                        <td>{{ $patrimonio->descricao }}</td>
+                        <td>R$ {{ number_format($patrimonio->valor, 2, ',', '.') }}</td>
                     </tr>
                     @php
-                        $total += $movimento['valor']; 
+                        $totalValor += $patrimonio->valor; // Soma o valor do patrimônio ao total
                     @endphp
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2" style="text-align: right; font-weight: bold;">Total:</td>
-                    <td style="font-weight: bold;">R$ {{ number_format($total, 2, ',', '.') }}</td>
+                    <td colspan="2" style="text-align: right; font-weight: bold;">Total de Patrimônio:</td>
+                    <td style="font-weight: bold;">R$ {{ number_format($totalValor, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>
-
-        <div class="date" style="text-align: right">
-            <p>Emitido em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
-        </div>
-    
+    </div>
 
     <!-- Rodapé -->
     <div class="footer">
-        <p>&copy; {{ date('Y') }} - Sistema Contábil - FSOFT SISTEMAS</p>
+        <p>&copy; {{ date('Y') }} - Sistema de Patrimônio - FSOFT SISTEMAS</p>
     </div>
 
 </body>
