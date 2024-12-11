@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
 use App\Models\Movimento;
 use App\Models\Patrimonio;
 use App\Models\Relatorio;
@@ -54,16 +55,17 @@ class RelatorioController extends Controller
         $reportType = $request->input('report_type');
         $empresaId = session('empresa_id');
 
-        // Verificar o tipo de relatório e carregar a lógica correspondente
+        if ($reportType === 'geral') {
+            $pdf = $this->gerarRelatorioGeral($startDate, $endDate, $empresaId);
+
+            // return $pdf->stream("relatorio_{$reportType}.pdf");
+            return $pdf->stream("relatorio_geral.pdf");
+        }
+
         switch ($reportType) {
             case 'dre':
                 $view = 'relatorio.dre';
                 $dados = $this->gerarRelatorioDre($startDate, $endDate, $empresaId);
-                break;
-
-            case 'geral':
-                $view = 'relatorio.geral';
-                $dados = $this->gerarRelatorioGeral($startDate, $endDate, $empresaId);
                 break;
 
             case 'cmv':
@@ -98,7 +100,7 @@ class RelatorioController extends Controller
 
     protected function gerarRelatorioDre($startDate, $endDate, $empresaId)
     {
-    
+
         $totalReceita = $this->getMovimentoSum($empresaId, $startDate, $endDate, 'receita');
         $totalCartao = $this->getMovimentoSum($empresaId, $startDate, $endDate, 'receita', 'cartao');
         $totalDinheiro = $this->getMovimentoSum($empresaId, $startDate, $endDate, 'receita', 'dinheiro');
@@ -123,8 +125,8 @@ class RelatorioController extends Controller
             ->whereBetween('movimentos.data', [$startDate, $endDate])
             ->sum('movimentos.valor');
 
-        $lucroAntesImpostos = $totalReceita - $totalDespesa;// - $totalDespesasOperacionais - $DespesasCompras;
-        $impostosSobreLucro = $lucroAntesImpostos * 0;//0.15;
+        $lucroAntesImpostos = $totalReceita - $totalDespesa; // - $totalDespesasOperacionais - $DespesasCompras;
+        $impostosSobreLucro = $lucroAntesImpostos * 0; //0.15;
         $lucroLiquido = $lucroAntesImpostos - $impostosSobreLucro;
 
         $dre = [
@@ -145,10 +147,45 @@ class RelatorioController extends Controller
         return $dre;
     }
 
-
     protected function gerarRelatorioGeral($startDate, $endDate, $empresaId)
     {
-        return Movimento::whereBetween('data', [$startDate, $endDate])->where('empresa_id', $empresaId)->get();
+
+
+
+        // Inicializar o conteúdo do PDF
+        $html = '';
+        $empresa = Empresa::find($empresaId);
+        // Capa do relatório
+        $capaHtml = view('relatorio.capa', compact('startDate', 'endDate', 'empresa'))->render();
+        $html .= $capaHtml;
+
+        // Relatório DRE
+        $dados = $this->gerarRelatorioDre($startDate, $endDate, $empresaId);
+        $dreView = view('relatorio.dre', compact('dados', 'startDate', 'endDate'))->render();
+        $html .= $dreView;
+
+        // Relatório CMV
+        $dados = $this->gerarRelatorioCmv($startDate, $endDate, $empresaId);
+        $cmvView = view('relatorio.cmv', compact('dados', 'startDate', 'endDate'))->render();
+        $html .= $cmvView;
+
+        // Relatório Despesas
+        $dados = $this->gerarRelatorioDespesas($startDate, $endDate, $empresaId);
+        $despesasView = view('relatorio.despesas', compact('dados', 'startDate', 'endDate'))->render();
+        $html .= $despesasView;
+
+        // Relatório Receitas
+        $dados = $this->gerarRelatorioReceitas($startDate, $endDate, $empresaId);
+        $receitasView = view('relatorio.receitas', compact('dados', 'startDate', 'endDate'))->render();
+        $html .= $receitasView;
+
+        // Relatório Patrimônio
+        $dados = $this->gerarRelatorioPatrimonio($empresaId);
+        $patrimonioView = view('relatorio.patrimonio', compact('dados'))->render();
+        $html .= $patrimonioView;
+
+        // Gerar e retornar o PDF
+        return FacadePdf::loadHTML($html);
     }
 
     protected function gerarRelatorioCmv($startDate, $endDate, $empresaId)
