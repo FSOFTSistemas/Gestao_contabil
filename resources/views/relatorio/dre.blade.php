@@ -78,7 +78,7 @@
     </div>
 
     <!-- Conteúdo -->
-    <div class="container">
+
         <table class="table">
             <thead>
                 <tr>
@@ -141,7 +141,7 @@
         <div class="date" style="text-align: right">
             <p>Emitido em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
         </div>
-    </div>
+  
 
     <!-- Rodapé -->
     <div class="footer">
