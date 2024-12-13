@@ -68,7 +68,8 @@
 <body>
     <div class="container">
         <!-- Logo da Empresa -->
-        <img src="{{ asset('images/logo.png') }}" alt="Logo da Empresa" class="logo">
+        {{-- <img src="{{ asset('images/logo.png') }}" alt="Logo da Empresa" class="logo"> --}}
+        <img src="{{ public_path('images/logo.png') }}" alt="Logo da Empresa" class="logo">
 
         <!-- Título do Relatório -->
         <div class="titulo">Relatório Geral</div>
