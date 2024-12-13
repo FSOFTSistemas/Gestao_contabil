@@ -7,15 +7,22 @@
 @stop
 
 @section('content')
-
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreate">Novo Patrimônio</button>
-
-    @component('components.data-table', ['itemsPerPage' => 10, 'showTotal' => true,'valueColumnIndex' => 4, 'responsive' => [[
-        'targets' => -1,
-        'orderable' => false,
-        'searchable' => false,
-        'className' => 'text-center'
-    ]]])
+    @can('acesso total')
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalCreate">Novo Patrimônio</button>
+    @endcan
+    @component('components.data-table', [
+        'itemsPerPage' => 10,
+        'showTotal' => true,
+        'valueColumnIndex' => 4,
+        'responsive' => [
+            [
+                'targets' => -1,
+                'orderable' => false,
+                'searchable' => false,
+                'className' => 'text-center',
+            ],
+        ],
+    ])
         <thead>
             <tr>
                 <th>#</th>
@@ -35,20 +42,22 @@
                     <td>{{ $patrimonio->empresa->razao_social }}</td>
                     <td>{{ number_format($patrimonio->valor, 2, ',', '.') }}</td>
                     <td>
-                        <!-- Botão de edição -->
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                            @can('acesso total')
+                            <!-- Botão de edição -->
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#modalEdit-{{ $patrimonio->id }}">
                                 <i class="fas fa-edit"></i>
-                        </button>
+                            </button>
 
-                        <!-- Formulário de exclusão -->
-                        <form action="{{ route('patrimonios.destroy', $patrimonio->id) }}" method="POST"
-                              style="display: inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
-                        </form>
-                    </td>
+                            <!-- Formulário de exclusão -->
+                            <form action="{{ route('patrimonios.destroy', $patrimonio->id) }}" method="POST"
+                                style="display: inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                            @endcan
+                        </td>
                 </tr>
             @endforeach
         </tbody>
@@ -79,7 +88,7 @@
     <!-- Modal de edição -->
     @foreach ($patrimonios as $patrimonio)
         <div class="modal fade" id="modalEdit-{{ $patrimonio->id }}" tabindex="-1"
-             aria-labelledby="modalEditLabel-{{ $patrimonio->id }}" aria-hidden="true">
+            aria-labelledby="modalEditLabel-{{ $patrimonio->id }}" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="{{ route('patrimonios.update', $patrimonio->id) }}" method="POST">

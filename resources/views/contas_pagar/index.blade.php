@@ -7,11 +7,17 @@
 @endsection
 
 @section('content')
-    {{-- Botão para adicionar nova conta --}}
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Nova Conta</button>
+    @can('acesso total')
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#createModal">Nova Conta</button>
+    @endcan
 
     {{-- DataTable --}}
-    @component('components.data-table', ['itemsPerPage' => 10, 'showTotal' => true,'valueColumnIndex' => 2, 'responsive' => []])
+    @component('components.data-table', [
+        'itemsPerPage' => 10,
+        'showTotal' => true,
+        'valueColumnIndex' => 2,
+        'responsive' => [],
+    ])
         <thead>
             <tr>
                 <th>#</th>
@@ -30,15 +36,18 @@
                     <td>{{ number_format($conta->valor, 2, ',', '.') }}</td>
                     <td>{{ \Carbon\Carbon::parse($conta->data_vencimento)->format('d/m/Y') }}</td>
                     <td>{{ ucfirst($conta->status) }}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $conta->id }}"><i class="fas fa-edit"></i></button>
+                    @can('acesso total')
+                        <td>
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#editModal{{ $conta->id }}"><i class="fas fa-edit"></i></button>
 
-                        <form action="{{ route('contas-a-pagar.destroy', $conta->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
-                        </form>
-                    </td>
+                            <form action="{{ route('contas-a-pagar.destroy', $conta->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button>
+                            </form>
+                        </td>
+                    @endcan
                 </tr>
 
                 {{-- Modal de edição --}}

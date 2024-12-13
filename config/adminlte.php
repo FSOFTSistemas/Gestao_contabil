@@ -331,37 +331,31 @@ return [
         'text' => 'Patrimônio',
         'url' => 'patrimonios',
         'icon' => 'fas fa-warehouse',
-        'can' => 'acesso total',
     ],
     [
         'text' => 'Contas a Pagar',
         'url' => 'contas-a-pagar',
         'icon' => 'fas fa-money-bill-wave',
-        'can' => 'acesso total',
     ],
     [
         'text' => 'Clientes',
         'url' => 'clientes',
         'icon' => 'fas fa-users',
-        'can' => 'acesso total',
     ], 
     [
         'text' => 'Fornecedores',
         'url' => 'fornecedores',
         'icon' => 'fas fa-truck',
-        'can' => 'acesso total',
     ],
     [
         'text' => 'Produtos / Serviços',
         'url' => 'produtos',
         'icon' => 'fas fa-box',
-        'can' => 'acesso total',
     ],
     [
         'text' => 'Movimento',
         'url' => 'movimentos',
         'icon' => 'fas fa-exchange-alt',
-        'can' => 'acesso total',
     ],
     [
         'text' => 'Planos de Contas',
