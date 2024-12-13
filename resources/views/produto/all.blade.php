@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    @can('admin')
+    @can('acesso total')
         <div class="row" style="margin-bottom: 2%">
             <div class="col">
                 <a class="btn btn-primary" href="{{ route('produtos.create') }}">+ Novo produto</a>
@@ -91,7 +91,7 @@
                             </div>
                         </div>
 
-                        @can('admin')
+                        @can('acesso total')
                             <!-- Botão Editar -->
                             <a href="{{ route('produtos.edit', $p->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                 <i class="fas fa-edit"></i>
