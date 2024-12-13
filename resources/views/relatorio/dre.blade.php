@@ -32,7 +32,7 @@
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            /* padding: 20px; */
+            padding: 20px;
         }
 
         .table {
@@ -43,7 +43,7 @@
 
         .table th, .table td {
             border: 1px solid #ddd;
-            /* padding: 8px; */
+            padding: 8px;
             text-align: left;
         }
 
@@ -78,7 +78,7 @@
     </div>
 
     <!-- Conteúdo -->
-    <div class="container">
+
         <table class="table">
             <thead>
                 <tr>
@@ -141,7 +141,7 @@
         <div class="date" style="text-align: right">
             <p>Emitido em: {{ \Carbon\Carbon::now()->format('d/m/Y H:i:s') }}</p>
         </div>
-    </div>
+  
 
     <!-- Rodapé -->
     <div class="footer">

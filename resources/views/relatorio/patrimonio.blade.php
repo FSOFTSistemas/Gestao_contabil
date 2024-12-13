@@ -78,7 +78,6 @@
     </div>
 
     <!-- Conteúdo -->
-    <div class="container">
         <table class="table">
             <thead>
                 <tr>
@@ -110,7 +109,6 @@
                 </tr>
             </tfoot>
         </table>
-    </div>
 
     <!-- Rodapé -->
     <div class="footer">
