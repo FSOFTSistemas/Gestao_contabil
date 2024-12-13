@@ -7,6 +7,7 @@
 @stop
 
 @section('content')
+@can('admin')
 <div class="d-flex justify-content-end align-items-center mt-3">
     {{-- Dropdown de Seleção de Empresas --}}
     <div class="dropdown mr-3">
@@ -35,6 +36,7 @@
     </div>
     @endif
 </div>
+@endcan
 <br>
 
 <div class="row">
