@@ -13,7 +13,7 @@
 
 @section('content')
     <div class="row" style="margin-bottom: 2%">
-        @can('admin')
+        @can('acesso total')
             <div class="col">
                 <a class="btn btn-primary" href="{{ route('clientes.create') }}">+ Novo Cliente</a>
             </div>
@@ -64,7 +64,7 @@
                             data-bs-target="#viewClienteModal{{ $cliente->id }}">
                             👁️
                         </button>
-                        @can('admin')
+                        @can('acesso total')
                             <a href="{{ route('clientes.edit', $cliente) }}" class="btn btn-warning btn-sm">
                                 ✏️
                             </a>

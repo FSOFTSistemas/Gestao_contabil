@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row" style="margin-bottom: 2%">
-        @can('admin')
+        @can('acesso total')
             <div class="col">
                 <a class="btn btn-primary" href="{{ route('fornecedores.create') }}">+ Novo fornecedor</a>
             </div>
@@ -53,7 +53,7 @@
                         <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#viewModal{{ $f->id }}">
                             <i class="fas fa-eye"></i>
                         </button>
-                        @can('admin')
+                        @can('acesso total')
                             <!-- Botão para editar -->
                             <a href="{{ route('fornecedores.edit', $f->id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-edit"></i>

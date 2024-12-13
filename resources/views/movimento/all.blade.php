@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row mb-3">
-        @can('admin')
+        @can('aesso total')
             <div class="col d-flex justify-content-start">
                 <!-- Botão para abrir o modal de nova venda -->
                 <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#newMovementModal">
@@ -69,7 +69,7 @@
                             data-bs-target="#viewModal{{ $movimento->id }}" title="Visualizar">
                             <i class="fas fa-eye"></i>
                         </button>
-                        @can('admin')
+                        @can('acesso total')
                             <!-- Botão de Editar -->
                             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#editModal{{ $movimento->id }}" title="Editar">
