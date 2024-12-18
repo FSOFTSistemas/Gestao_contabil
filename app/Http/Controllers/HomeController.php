@@ -32,6 +32,11 @@ class HomeController extends Controller
         $empresas = Empresa::all();
         $empresaId = session('empresa_id');
 
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+
         $clientes = Cliente::where('empresa_id', $empresaId)->count();
         $fornecedores = Fornecedor::where('empresa_id', $empresaId)->count();
         $totalDespesas = Movimento::where('tipo', 'despesa')->where('empresa_id', $empresaId)->sum('valor');

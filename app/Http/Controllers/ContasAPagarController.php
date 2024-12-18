@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\ContasAPagar;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wavey\Sweetalert\Sweetalert;
 
 class ContasAPagarController extends Controller
 {
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+        
         try {
-            $contas = ContasAPagar::where('empresa_id', session('empresa_id'))->get();
+            $contas = ContasAPagar::where('empresa_id', $empresaId)->get();
             return view('contas_pagar.index', compact('contas'));
             
         } catch (\Exception $e) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wavey\Sweetalert\Sweetalert;
 
 class ProdutoController extends Controller
@@ -14,8 +15,15 @@ class ProdutoController extends Controller
      */
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+        
         try {
-            $produtos = Produto::where('empresa_id', session('empresa_id'))->get();
+            $produtos = Produto::where('empresa_id', $empresaId)->get();
             return view('produto.all', ['produtos' => $produtos]);
             
         } catch (\Exception $e) {

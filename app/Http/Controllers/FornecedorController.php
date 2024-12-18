@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Fornecedor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wavey\Sweetalert\Sweetalert;
 
 class FornecedorController extends Controller
@@ -14,8 +15,15 @@ class FornecedorController extends Controller
      */
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+        
         try {
-            $fornecedores = Fornecedor::where('empresa_id', session('empresa_id'))->get();
+            $fornecedores = Fornecedor::where('empresa_id', $empresaId)->get();
             return view('fornecedores.all', ['fornecedores' =>  $fornecedores]);
 
         } catch (\Exception $e) {
