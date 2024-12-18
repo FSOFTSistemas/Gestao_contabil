@@ -260,7 +260,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => 'register',
+    'register_url' => false, //'register',
     'password_reset_url' => false, //'password/reset',
     'password_email_url' => false, //'password/email',
     'profile_url' => false,
