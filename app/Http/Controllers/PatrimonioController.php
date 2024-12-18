@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\Patrimonio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wavey\Sweetalert\Sweetalert;
 
 class PatrimonioController extends Controller
 {
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+        
         try {
-            $patrimonios = Patrimonio::where('empresa_id', session('empresa_id'))->get();
-            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            $patrimonios = Patrimonio::where('empresa_id', $empresaId)->get();
+            $empresas = Empresa::where('id', $empresaId)->get();
             return view('patrimonio.index', compact('patrimonios', 'empresas'));
         } catch (\Exception $e) {
             Sweetalert::error('Verifique se selecionou empresa !'.$e->getMessage(), 'Error');

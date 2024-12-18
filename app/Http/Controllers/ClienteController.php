@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\cliente;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Wavey\Sweetalert\Sweetalert;
 
@@ -15,9 +16,16 @@ class ClienteController extends Controller
      */
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
+
         try
         {
-            $clientes = cliente::where('empresa_id', session('empresa_id'))->get();
+            $clientes = cliente::where('empresa_id', $empresaId)->get();
             return view('cliente.all', ['clientes' => $clientes]);
 
         }catch(\Exception $e)

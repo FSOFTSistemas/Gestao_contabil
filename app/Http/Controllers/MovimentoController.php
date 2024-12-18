@@ -8,6 +8,7 @@ use App\Models\Movimento;
 use App\Models\PlanoDeContas;
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Wavey\Sweetalert\Sweetalert;
 
 class MovimentoController extends Controller
@@ -17,10 +18,16 @@ class MovimentoController extends Controller
      */
     public function index()
     {
+        $empresaId = session('empresa_id');
+
+        if (!$empresaId)
+        {
+            $empresaId = Auth::user()->empresa_id;
+        }
         try {
-            $movimentos = Movimento::where('empresa_id', session('empresa_id'))->get();
-            $produtosServicos = Produto::where('empresa_id', session('empresa_id'))->get();
-            $empresas = Empresa::where('id', session('empresa_id'))->get();
+            $movimentos = Movimento::where('empresa_id', $empresaId)->get();
+            $produtosServicos = Produto::where('empresa_id', $empresaId)->get();
+            $empresas = Empresa::where('id', $empresaId)->get();
             $planodecontas = PlanoDeContas::orderBy('descricao', 'asc')->get();
             return view('movimento.all', ['movimentos' => $movimentos, 'produtosServicos' => $produtosServicos, 'empresas' => $empresas, 'planodecontas' => $planodecontas]);
 
