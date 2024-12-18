@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row mb-3">
-        @can('aesso total')
+        @can('acesso total')
             <div class="col d-flex justify-content-start">
                 <!-- Botão para abrir o modal de nova venda -->
                 <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#newMovementModal">
@@ -59,7 +59,17 @@
             @foreach ($movimentos as $movimento)
                 <tr>
                     <td>{{ $movimento->descricao }}</td>
-                    <td>{{ $movimento->tipo }}</td>
+                    <td>
+                        @if ($movimento->tipo === 'despesa')
+                            <span class="badge bg-danger">Despesas</span>
+                        @elseif ($movimento->tipo === 'receita')
+                            <span class="badge bg-success">Receitas</span>
+                        @elseif ($movimento->tipo === 'cmv')
+                            <span class="badge bg-primary">CMV</span>
+                        @else
+                            <span class="badge bg-secondary">{{ ucfirst($movimento->tipo) }}</span>
+                        @endif
+                    </td>
                     <td>{{ \Carbon\Carbon::parse($movimento->data)->format('d/m/Y') }}</td>
                     <td>{{ $movimento->forma_pagamento }}</td>
                     <td>{{ number_format($movimento->valor, 2, ',', '.') }}</td>
