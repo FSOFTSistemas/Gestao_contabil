@@ -103,7 +103,11 @@
 </div>
 
 
-
+<div class="row mt-4">
+    <div class="col-md-12">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
 
 @stop
 
@@ -126,7 +130,47 @@
 @stop
 
 @section('js')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
 <script>
-    console.log("Hi, I'm using the Laravel-AdminLTE package!");
+
+    const dadosGrafico = @json($dadosGrafico);
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dadosGrafico.meses,
+            datasets: [{
+                    label: 'Receitas',
+                    data: dadosGrafico.receitas,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Despesas',
+                    data: dadosGrafico.despesas,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 </script>
 @stop
