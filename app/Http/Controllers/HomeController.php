@@ -69,8 +69,9 @@ class HomeController extends Controller
 
         $clientes = Cliente::where('empresa_id', $empresaId)->count();
         $fornecedores = Fornecedor::where('empresa_id', $empresaId)->count();
-        $totalDespesas = Movimento::where('tipo', 'despesa')->where('empresa_id', $empresaId)->sum('valor');
-        $totalReceitas = Movimento::where('tipo', 'receita')->where('empresa_id', $empresaId)->sum('valor');
+        $totalDespesas = Movimento::where('tipo', 'despesa')->where('empresa_id', $empresaId)->whereMonth('data', Carbon::now()->month)->whereYear('data', Carbon::now()->year)->sum('valor');
+        $totalDespesas = Movimento::where('tipo', 'despesa')->where('empresa_id', $empresaId)->whereMonth('data', Carbon::now()->month)->whereYear('data', Carbon::now()->year)->sum('valor');
+        $totalReceitas = Movimento::where('tipo', 'receita')->where('empresa_id', $empresaId)->whereMonth('data', Carbon::now()->month)->whereYear('data', Carbon::now()->year)->sum('valor');
         
 
         return view('home', [
