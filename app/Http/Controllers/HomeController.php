@@ -48,7 +48,7 @@ class HomeController extends Controller
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                 return $query->whereBetween('data', [$startDate, $endDate]);
             })
-            ->selectRaw("DATE_FORMAT(data, '%Y-%m') as mes, tipo, SUM(valor) as total")
+            ->selectRaw("DATE_FORMAT(data, '%m-%Y') as mes, tipo, SUM(valor) as total")
             ->groupBy('mes', 'tipo')
             ->orderBy('mes')
             ->get();
