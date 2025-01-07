@@ -72,21 +72,6 @@
     <!-- ./col -->
     <div class="col-lg-3 col-6">
         <!-- small box -->
-        <div class="small-box bg-warning">
-            <div class="inner">
-                <h3>{{ $fornecedores }}</h3>
-
-                <p>Fornecedores</p>
-            </div>
-            <div class="icon">
-                <i class="ion ion-person-add"></i>
-            </div>
-            <a href="/fornecedores" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-    </div>
-    <!-- ./col -->
-    <div class="col-lg-3 col-6">
-        <!-- small box -->
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3><sup style="font-size: 20px">R$</sup>{{ $totalDespesas }}</h3>
@@ -100,6 +85,21 @@
         </div>
     </div>
     <!-- ./col -->
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+        <!-- small box -->
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3><sup style="font-size: 20px">R$</sup>{{ $totalReceitas -  $totalDespesas }}</h3>
+
+                <p>Previsão de resultado</p>
+            </div>
+            <div class="icon">
+                <i class="ion ion-person-add"></i>
+            </div>
+            <a href="/movimentos" class="small-box-footer">Mais informações <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
 </div>
 
 

@@ -14,17 +14,15 @@ class ContasAPagarController extends Controller
     {
         $empresaId = session('empresa_id');
 
-        if (!$empresaId)
-        {
+        if (!$empresaId) {
             $empresaId = Auth::user()->empresa_id;
         }
-        
+
         try {
             $contas = ContasAPagar::where('empresa_id', $empresaId)->get();
             return view('contas_pagar.index', compact('contas'));
-            
         } catch (\Exception $e) {
-            Sweetalert::error('Verifique se selecionou empresa !'.$e->getMessage(), 'Error');
+            Sweetalert::error('Verifique se selecionou empresa !' . $e->getMessage(), 'Error');
         }
     }
 
@@ -37,37 +35,45 @@ class ContasAPagarController extends Controller
                 'data_vencimento' => 'required|date',
                 'status' => 'required|string|in:pendente,pago',
             ]);
-    
+
             $data['empresa_id'] = session('empresa_id');
-    
+
             ContasAPagar::create($data);
 
             Sweetalert::success('Conta a pagar criada com sucesso!', 'Sucesso');
 
             return redirect()->back()->with('success', 'Conta a pagar criada com sucesso!');
-
         } catch (\Exception $e) {
-            Sweetalert::error('Erro ao inserir  !'.$e->getMessage(), 'Error');
+            Sweetalert::error('Erro ao inserir  !' . $e->getMessage(), 'Error');
             return redirect()->back()->withInput();
         }
     }
 
-    public function update(Request $request, ContasAPagar $contaPagar)
+    public function update(Request $request,  $conta)
     {
         try {
+
+            $contaPagar = ContasAPagar::findOrFail($conta);
+
             $data = $request->validate([
                 'descricao' => 'required|string|max:255',
                 'valor' => 'required|numeric',
                 'data_vencimento' => 'required|date',
                 'status' => 'required|string|in:pendente,pago',
             ]);
-    
-            $contaPagar->update($data);
+
+
+            $contaPagar->descricao = $data['descricao'];
+            $contaPagar->valor = $data['valor'];
+            $contaPagar->data_vencimento = $data['data_vencimento'];
+            $contaPagar->status = $data['status'];
+
+            $contaPagar->save();
+            
             Sweetalert::success('Conta a pagar atualizada com sucesso!', 'Sucesso');
             return redirect()->back()->with('success', 'Conta a pagar atualizada com sucesso!');
-
         } catch (\Exception $e) {
-            Sweetalert::error('Erro ao atualizar !'.$e->getMessage(), 'Error');
+            Sweetalert::error('Erro ao atualizar !' . $e->getMessage(), 'Error');
             return redirect()->back()->withInput();
         }
     }
@@ -79,9 +85,8 @@ class ContasAPagarController extends Controller
             $contaPagar->delete();
             Sweetalert::success('Conta a pagar removida com sucesso!', 'Sucesso');
             return redirect()->back()->with('success', 'Conta a pagar removida com sucesso!');
-
         } catch (\Exception $e) {
-            Sweetalert::error('Erro ao deletar !'.$e->getMessage(), 'Error');
+            Sweetalert::error('Erro ao deletar !' . $e->getMessage(), 'Error');
             return redirect()->back();
         }
     }
